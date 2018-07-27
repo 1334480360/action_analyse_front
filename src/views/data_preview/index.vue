@@ -7,7 +7,7 @@
         <div class="pull-right">
           <date-picker v-show="dateShow"/>
           <button class="el-button el-button--primary el-button--medium" @click="datePick" style="font-size: 13px">日期</button>
-          <button class="el-button el-button--primary el-button--medium" style="font-size: 13px">刷新</button>
+          <button class="el-button el-button--primary el-button--medium" @click="refresh" style="font-size: 13px">刷新</button>
         </div>
       </div>
 
@@ -27,6 +27,7 @@
   import IndexDetail from './index_detail'
   import IndexDetailData from './index_detail_data'
   import IndexDetailChart from './index_detail_chart'
+  import RefreshHandler from '../../utils/refresh-handler'
 
   import {indexList} from "../../api/module_index";
 
@@ -49,7 +50,8 @@
       return {
         title: this.getTitle(),
         dateShow: false,
-        list: null
+        list: null,
+        activeDate: 0
       }
     },
     mounted() {
@@ -58,6 +60,9 @@
     methods: {
       datePick: function () {
         this.dateShow = !this.dateShow
+      },
+      refresh: function () {
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       getTitle: function () {
         let code = this.$route.path.split('/')[2];

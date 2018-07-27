@@ -5,7 +5,7 @@
       <div class="widget-topbar" style="cursor: auto;">
         <div class="widget-title">
           <div class="title">
-            <span>{{detail.title}}</span>
+            <a>{{detail.title}}</a>
           </div>
           <div class="range">{{detail.beginDate}}<span>~</span>{{detail.endDate}} | 过去 30 天</div>
         </div>
@@ -19,17 +19,17 @@
             <div class="inner">
               <div class="main-number-content">
                 <div class="">
-                  <div>7-23(一)</div>
+                  <div>{{detail.dateStr}}</div>
                   <div class="number-content clearfix">
                     <span class="number" data-origindata="2131" title="2131">{{detail.value}}</span>
-                    <span class="measuresUnit">人</span>
+                    <span class="measuresUnit">{{detail.unit}}</span>
                     <div class="mom-yoy-content">
                       <div class="MOM-content">
                         <div data-toggle="tooltip" data-placement="top" :data-original-title="detail.monthToMonthDesc">
                           <span class="measuresUnit">环比</span>
                           <span :data-yoy-mom="detail.monthToMonth + '%'" class="kpi-rise">
-                  <span class="icon-rising"></span>
-                  <!--<span class="icon-falling"></span>-->
+                  <span class="icon-falling"></span>
+                            <!--<span class="icon-rising"></span>-->
                   <span>{{detail.monthToMonth}}%</span>
                 </span>
                         </div>
@@ -85,10 +85,12 @@
 
         <div class="col-md-12" v-show="data.chartType != null">
           <keep-alive>
-            <line-chart :chart-data="lineChartData" :total-show="data.hasStat == 1" v-if="data.chartType === 'line'"></line-chart>
+            <line-chart :chart-data="detail.charts" :total-show="data.hasStat == 1"
+                        v-if="data.chartType === 'line'"></line-chart>
             <bar-chart :total-show="data.hasStat == 1" v-else-if="data.chartType === 'column'"></bar-chart>
             <pie-chart :total-show="data.hasStat == 1" v-else-if="data.chartType === 'pie'"></pie-chart>
-            <area-chart :chart-data="lineChartData" :total-show="data.hasStat == 1" v-else-if="data.chartType === 'areaspline'"></area-chart>
+            <line-area-chart :chart-data="detail.charts" :total-show="data.hasStat == 1"
+                             v-else-if="data.chartType === 'areaspline'"></line-area-chart>
           </keep-alive>
         </div>
 
@@ -99,45 +101,42 @@
 
 <script>
   import LineChart from '../components/LineChart'
+  import LineAreaChart from '../components/LineAreaChart'
   import PieChart from '../components/PieChart'
   import BarChart from '../components/BarChart'
   import BoxCard from '../components/BoxCard'
-  import AreaChart from "../components/AreaChart";
 
   import {indexDetail} from "../../api/module_index";
-
-  const lineChartData = {
-    newVisitis: {
-      expectedData: [100, 120, 161, 134, 105, 160, 165],
-      actualData: [120, 82, 91, 154, 162, 140, 145]
-    }
-  };
+  import {formatCurrency} from '../../assets/common';
 
   export default {
     components: {
-      AreaChart,
       LineChart,
+      LineAreaChart,
       PieChart,
       BarChart,
       BoxCard
     },
     data() {
       return {
-        lineChartData: lineChartData.newVisitis,
-        detail: []
+        detail: [],
       }
     },
-    mounted() {
+    created() {
       this.getIndexDetail();
     },
+    beforeDestroy() {
+      this.$store.commit('clearChartList')
+    },
     methods: {
-      handleSetLineChartData(type) {
-        this.lineChartData = lineChartData[type]
-      },
       async getIndexDetail() {
-        indexDetail(this.data.id, this.code, '2018-07-10', '2018-07-24').then(res => {
+        indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate).then(res => {
           this.detail = res.data.data;
-          console.log(this.detail);
+          this.detail.value = formatCurrency(this.detail.value, this.detail.unit);
+          this.detail.avgValue = formatCurrency(this.detail.avgValue, this.detail.unit);
+          this.detail.totalValue = formatCurrency(this.detail.totalValue, this.detail.unit);
+
+          this.$store.commit('addToAutoRefreshChartList', this.getIndexDetail);
         });
       }
     },

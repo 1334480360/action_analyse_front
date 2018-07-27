@@ -1,11 +1,12 @@
 <!--折线图-->
 <template>
-  <div :class="className" :style="{height:totalShow ? '230px' : '300px',width:width}"></div>
+  <div :class="className" :style="{height:totalShow ? '210px' : '285px',width:width}"></div>
 </template>
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+
+require('echarts/theme/macarons'); // echarts theme
 import { debounce } from '@/utils'
 
 export default {
@@ -22,16 +23,16 @@ export default {
       type: String,
       default: '100%'
     },
-    // height: {
-    //   type: String,
-    //   default: this.totalShow ? '230px' : '300px'
-    // },
     autoResize: {
       type: Boolean,
       default: true
     },
     chartData: {
-      type: Object
+      type: Object,
+      required: true,
+      default () {
+        return {}
+      }
     }
   },
   data() {
@@ -77,20 +78,36 @@ export default {
     }
   },
   methods: {
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions: function(charts) {
+      if (charts === null) {
+        return;
+      }
+
+      const keys = Object.keys(charts);
+      let xAxisSet = new Set();
+      let seriesMap = new Map();
+      keys.map(val => {
+        let seriesArr = [];
+        charts[val].map(val1 => {
+          xAxisSet.add(val1.date);
+          seriesArr.push(val1.value);
+        });
+        seriesMap.set(val, seriesArr);
+      });
+
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: Array.from(xAxisSet),
           boundaryGap: false,
           axisTick: {
             show: false
           }
         },
         grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
+          top: 15,
+          bottom: 30,
+          left: 0,
+          right: 0,
           containLabel: true
         },
         tooltip: {
@@ -106,32 +123,30 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          bottom: 'bottom',
+          data: keys.map(val => {
+            return val;
+          })
         },
-        series: [{
-          name: 'actual',
-          smooth: false,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#3888fa'
+        series: keys.map(val => {
+          return {
+            name: val,
+            smooth: false,
+            type: 'line',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                }
               }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+            },
+            animationDuration: 2800,
+            data: seriesMap.get(val)
+          }
+        }),
       })
     },
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el, 'macarons');
       this.setOptions(this.chartData)
     }
   }

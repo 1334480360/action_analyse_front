@@ -14,7 +14,7 @@ export default {
     retain: 'Retain',
     distribution: 'Distribution',
     user_path: 'User_path',
-    duration: 'Duration',
+    duration: 'Duration'
   },
   navbar: {
     logOut: 'Log Out',

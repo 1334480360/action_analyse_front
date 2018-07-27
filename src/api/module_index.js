@@ -10,7 +10,7 @@ export function indexList(code) {
 }
 
 //获取指标详细
-export function indexDetail(id, code, beginDate, endDate) {
+export function indexDetail (id, code, beginDate, endDate) {
   // console.log(id + ", " + code + ", " + beginDate + ", " + endDate);
   return request({
     url: 'http://localhost:8017/action-analyse/preview/data/getIndexVo',

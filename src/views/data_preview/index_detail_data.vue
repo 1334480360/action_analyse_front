@@ -31,7 +31,10 @@
 
 <script>
   export default {
-    props: {}
+    props: {},
+    beforeDestroy () {
+      this.$store.commit('clearChartList')
+    },
   }
 </script>
 
