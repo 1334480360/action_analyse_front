@@ -24,10 +24,13 @@ export default {
       type: String,
       default: '100%'
     },
-    // height: {
-    //   type: String,
-    //   default: this.totalShow ? '220px' : '290px'
-    // }
+    chartData: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    }
   },
   data() {
     return {
@@ -35,12 +38,12 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    this.initChart();
     this.__resizeHanlder = debounce(() => {
       if (this.chart) {
         this.chart.resize()
       }
-    }, 100)
+    }, 100);
     window.addEventListener('resize', this.__resizeHanlder)
   },
   beforeDestroy() {
@@ -51,27 +54,63 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
+    }
+  },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el, 'macarons');
+      this.setOptions(this.chartData);
+    },
+    sort: function (a, b) {
+      return a - b;
+    },
+    setOptions: function(charts) {
+      this.chart.clear();
+      if (charts === null) {
+        return;
+      }
+      this.chart.clear();
+      if (charts === null || charts.length === undefined) {
+        return;
+      }
+
+      //横坐标值
+      let xAxisSet = new Set();
+      //维度列表
+      let seriesMap = new Map();
+      charts.map(val1 => {
+        let seriesArr = [];
+        val1.datas.map(val2 => {
+          xAxisSet.add(val2.date);
+          seriesArr.push(val2.value);
+        });
+        seriesMap.set(val1.dimension, seriesArr);
+      });
 
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
+          },
+          padding: [5, 10]
         },
         grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
+          top: 15,
+          bottom: 30,
+          left: 0,
+          right: 0,
           containLabel: true
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: Array.from(xAxisSet).sort(this.sort),
           axisTick: {
             alignWithLabel: true
           }
@@ -82,30 +121,23 @@ export default {
             show: false
           }
         }],
-        series: [{
-          name: 'pageA',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
+        legend: {
+          bottom: 'bottom',
+          data: charts.map(val => {
+            return val.dimension;
+          })
+        },
+        series: charts.map(val => {
+          return {
+            name: val.dimension,
+            type: 'bar',
+            animationDuration: 2800,
+            data: seriesMap.get(val.dimension)
+          }
+        })
       })
     }
+
   }
 }
 </script>

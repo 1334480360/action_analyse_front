@@ -28,10 +28,10 @@ export default {
       default: true
     },
     chartData: {
-      type: Object,
+      type: Array,
       required: true,
       default () {
-        return {}
+        return []
       }
     }
   },
@@ -66,7 +66,7 @@ export default {
     const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
 
-    this.chart.dispose()
+    this.chart.dispose();
     this.chart = null
   },
   watch: {
@@ -78,27 +78,33 @@ export default {
     }
   },
   methods: {
+    sort: function (a, b) {
+      return a - b;
+    },
+
     setOptions: function(charts) {
-      if (charts === null) {
+      this.chart.clear();
+      if (charts === null || charts.length === undefined) {
         return;
       }
 
-      const keys = Object.keys(charts);
+      //横坐标值
       let xAxisSet = new Set();
+      //维度列表
       let seriesMap = new Map();
-      keys.map(val => {
+      charts.map(val1 => {
         let seriesArr = [];
-        charts[val].map(val1 => {
-          xAxisSet.add(val1.date);
-          seriesArr.push(val1.value);
+        val1.datas.map(val2 => {
+          xAxisSet.add(val2.date);
+          seriesArr.push(val2.value);
         });
-        seriesMap.set(val, seriesArr);
+        seriesMap.set(val1.dimension, seriesArr);
       });
 
       this.chart.setOption({
         xAxis: {
-          data: Array.from(xAxisSet),
-          boundaryGap: false,
+          data: Array.from(xAxisSet).sort(this.sort),
+          boundaryGap: true,
           axisTick: {
             show: false
           }
@@ -123,18 +129,19 @@ export default {
           }
         },
         legend: {
+          type: 'scroll',
           bottom: 'bottom',
-          data: keys.map(val => {
-            return val;
+          data: charts.map(val => {
+            return val.dimension;
           })
         },
-        series: keys.map(val => {
+        series: charts.map(val => {
           return {
-            name: val,
+            name: val.dimension,
             smooth: false,
             type: 'line',
             animationDuration: 2800,
-            data: seriesMap.get(val)
+            data: seriesMap.get(val.dimension)
           }
         }),
       })

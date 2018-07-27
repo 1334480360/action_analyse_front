@@ -13,9 +13,9 @@
 
       <!--图表模块-->
       <div class="bd" v-for="detail in list">
-        <index-detail-data :data="detail" v-if="detail.dataOnly === 1"/>
+        <index-detail-data :data="detail" :code="getCode()" v-if="detail.dataOnly === 1"/>
         <index-detail-chart :data="detail" :code="getCode()" v-else-if="detail.hasChart === 1"/>
-        <index-detail :data="detail" v-else/>
+        <index-detail :data="detail" :code="getCode()" v-else/>
       </div>
 
     </div>

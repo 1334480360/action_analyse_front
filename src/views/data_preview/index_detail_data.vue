@@ -5,9 +5,11 @@
       <div class="widget-topbar" style="cursor: auto;">
         <div class="widget-title">
           <div class="title">
-            <span>剩余本金</span>
+            <a>{{detail.title}}</a>
           </div>
-          <div class="range"></div>
+          <div class="range">
+            {{this.GLOBAL.endDate}}
+          </div>
         </div>
         <div class="pull-right widget-setting">
           <div class="customer-menu"></div>
@@ -19,7 +21,7 @@
           <div class="dashboard-number-container ">
             <div class="inner">
               <div class="user-analytics-content">
-                <span>17,290,501,361</span><span></span>
+                <span>{{detail.value}}</span><span></span>
               </div>
             </div>
           </div>
@@ -30,11 +32,41 @@
 </template>
 
 <script>
+  import {indexDetail} from "../../api/module_index";
+  import {formatCurrency} from '../../assets/common';
+
   export default {
-    props: {},
-    beforeDestroy () {
+    props: {
+      data: {
+        required: true,
+        type: Object
+      },
+      code: {
+        required: true,
+        type: String
+      }
+    },
+    data() {
+      return {
+        detail: []
+      }
+    },
+    created() {
+      this.getIndexDetail();
+    },
+    beforeDestroy() {
       this.$store.commit('clearChartList')
     },
+    methods: {
+      async getIndexDetail() {
+        indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate).then(res => {
+          this.detail = res.data.data;
+          this.detail.value = formatCurrency(this.detail.value, this.detail.unit);
+
+          this.$store.commit('addToAutoRefreshChartList', this.getIndexDetail);
+        });
+      }
+    }
   }
 </script>
 

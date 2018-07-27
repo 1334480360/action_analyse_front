@@ -11,7 +11,7 @@ export function formatCurrency(num, unit) {
     return num;
   }
 
-  if(unit !== 'money'){
+  if(unit !== '元'){
     return formatNum(num);
   }
 
