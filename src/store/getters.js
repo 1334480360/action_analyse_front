@@ -15,6 +15,7 @@ const getters = {
   addRouters: state => state.permission.addRouters,
   errorLogs: state => state.errorLog.logs,
   autoRefreshCode: state => state.date.autoRefreshCode,
-  autoRefreshChartList: state => state.date.autoRefreshChartList
+  autoRefreshChartList: state => state.date.autoRefreshChartList,
+  appName: state => state.date.appName
 };
 export default getters

@@ -30,7 +30,6 @@ export default {
     },
     chartData: {
       type: Array,
-      required: true,
       default () {
         return []
       }
@@ -117,7 +116,7 @@ export default {
           top: 15,
           bottom: 30,
           left: 0,
-          right: 0,
+          right: 10,
           containLabel: true
         },
         tooltip: {

@@ -22,7 +22,7 @@
                 <div class="">
                   <div>{{detail.dateStr}}</div>
                   <div class="number-content clearfix">
-                    <span class="number" data-origindata="2131" title="2131">{{detail.value}}</span>
+                    <span class="number" data-origindata="2131" title="2131">{{detail.value || 0}}</span>
                     <span class="measuresUnit">{{detail.unit}}</span>
                     <div class="mom-yoy-content">
                       <div class="MOM-content">
@@ -31,7 +31,7 @@
                           <span :data-yoy-mom="detail.monthToMonth + '%'" class="kpi-rise">
                   <span class="icon-falling"></span>
                             <!--<span class="icon-rising"></span>-->
-                  <span>{{detail.monthToMonth}}%</span>
+                  <span>{{detail.monthToMonth || 0}}%</span>
                 </span>
                         </div>
                       </div>
@@ -40,7 +40,7 @@
                           <span class="measuresUnit">同比</span>
                           <span :data-yoy-mom="detail.yearToYear + '%'" class="kpi-rise">
                   <span class="icon-rising"></span>
-                  <span>{{detail.yearToYear}}%</span>
+                  <span>{{detail.yearToYear || 0}}%</span>
                 </span>
                         </div>
                       </div>
@@ -52,12 +52,12 @@
                 <div>
                   <span>合计</span>
                   <span class="number" :title="detail.totalValue" :data-origindata="detail.totalValue">{{detail.totalValue}}</span>
-                  <span class="measuresUnit">{{detail.unit}}</span>
+                  <span class="measuresUnit">{{detail.totalUnit}}</span>
                 </div>
                 <div>
                   <span>均值</span>
                   <span class="number" :title="detail.avgValue" :data-origindata="detail.avgValue">{{detail.avgValue}}</span>
-                  <span class="measuresUnit">{{detail.unit}}</span>
+                  <span class="measuresUnit">{{detail.avgUnit}}</span>
                 </div>
               </div>
             </div>
@@ -86,7 +86,10 @@
   import BoxCard from '../components/BoxCard'
 
   import {indexDetail} from "../../api/module_index";
-  import {formatCurrency} from '../../assets/common';
+  import {unitConvert} from '../../assets/common';
+  import {numConvert} from '../../assets/common';
+
+  import {mapGetters} from 'vuex'
 
   export default {
     components: {
@@ -101,6 +104,9 @@
         detail: [],
       }
     },
+    computed: {
+      ...mapGetters(['appName'])
+    },
     created() {
       this.getIndexDetail();
     },
@@ -109,11 +115,22 @@
     },
     methods: {
       async getIndexDetail() {
-        indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate).then(res => {
+        indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate, this.appName).then(res => {
           this.detail = res.data.data;
-          this.detail.value = formatCurrency(this.detail.value, this.detail.unit);
-          this.detail.avgValue = formatCurrency(this.detail.avgValue, this.detail.unit);
-          this.detail.totalValue = formatCurrency(this.detail.totalValue, this.detail.unit);
+
+          let value = this.detail.value;
+          let totalValue = this.detail.totalValue;
+          let avgValue = this.detail.avgValue;
+          let unit = this.detail.unit;
+
+          this.detail.value = numConvert(value, unit);
+          this.detail.unit = unitConvert(value, unit);
+
+          this.detail.totalValue = numConvert(totalValue, unit);
+          this.detail.totalUnit = unitConvert(totalValue, unit);
+
+          this.detail.avgValue = numConvert(avgValue, unit);
+          this.detail.avgUnit = unitConvert(avgValue, unit);
 
           this.$store.commit('addToAutoRefreshChartList', this.getIndexDetail);
         });

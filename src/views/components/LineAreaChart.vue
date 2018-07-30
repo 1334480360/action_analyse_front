@@ -29,7 +29,6 @@
       },
       chartData: {
         type: Array,
-        required: true,
         default () {
           return []
         }

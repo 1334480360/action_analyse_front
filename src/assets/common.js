@@ -11,8 +11,8 @@ export function formatCurrency(num, unit) {
     return num;
   }
 
-  if (unit !== '元') {
-    return formatNum(num);
+  if ('元'.indexOf(unit) === -1) {
+    return formatNum(num, unit);
   }
 
   num = num.toString().replace(/\$|\,/g, '');
@@ -31,11 +31,60 @@ export function formatCurrency(num, unit) {
 }
 
 /**
- * 不保留有效数字
+ * @title：单位自适应
+ * @author：xuan
+ * @date：2018/7/30
+ */
+export function unitConvert(num, unit) {
+  num = parseFloat(num);
+  if (num >= 10000 * 10000 * 10000) {
+    return '兆' + unit;
+  }else if (num >= 10000 * 10000 * 1000) {
+    return '千亿' + unit;
+  }else if (num >= 10000 * 10000) {
+    return '亿' + unit;
+  }else if (num >= 10000 * 1000) {
+    return '千万' + unit;
+  }else if (num >= 10000) {
+    return '万' + unit;
+  } else {
+    return unit;
+  }
+}
+
+/**
+ * @title：数字自适应(判断条件需与单位一致)
+ * @author：xuan
+ * @date：2018/7/30
+ */
+export function numConvert(num, unit) {
+  num = parseFloat(num);
+  if (num >= 10000 * 10000 * 10000) {
+    return formatCurrency(num/(10000 * 10000 * 10000), unit);
+  }else if (num >= 10000 * 10000 * 1000) {
+    return formatCurrency(num/(10000 * 10000 * 1000), unit);
+  }else if (num >= 10000 * 10000) {
+    return formatCurrency(num/(10000 * 10000), unit);
+  }else if (num >= 10000 * 1000) {
+    return formatCurrency(num/(10000 * 1000), unit);
+  }else if (num >= 10000) {
+    return formatCurrency(num / 10000, unit);
+  } else {
+    return num;
+  }
+}
+
+/**
+ * 不保留小数
  * @param num
  */
-function formatNum(num) {
-  let t = parseInt(num), i, r;
+function formatNum(num, unit) {
+  let t = parseInt(num);
+  //时间保留三位有效数字
+  if(unit === null || unit === '秒'){
+    t = num.toFixed(3);
+  }
+  let i, r;
   for (t = t.toString().replace(/^(\d*)$/, "$1."), t = (t + "00").replace(/(\d*\.\d\d)\d*/, "$1"), t = t.replace(".", ","), i = /(\d)(\d{3},)/; i.test(t);)
     t = t.replace(i, "$1,$2");
   return t = t.replace(/,(\d\d)$/, ".$1"), r = t.split("."), r[1] == "00" && (t = r[0]), t

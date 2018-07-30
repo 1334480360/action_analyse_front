@@ -5,6 +5,16 @@
       <!--菜单栏-->
       <div class="dashboard-toolbar">
         <span class="dashboard-name">{{title}}</span>
+        <el-select v-model="select.value" filterable placeholder="请选择项目"
+                   v-show="code === 'OPERATE'" @change="change"
+        >
+          <el-option
+            v-for="item in select.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
         <div class="pull-right">
           <date-picker v-show="dateShow"/>
           <button class="el-button el-button--primary el-button--medium" @click="datePick" style="font-size: 13px">日期</button>
@@ -14,9 +24,9 @@
 
       <!--图表模块-->
       <div class="bd" v-for="detail in list">
-        <index-detail-data :data="detail" :code="getCode()" v-if="detail.dataOnly === 1"/>
-        <index-detail-chart :data="detail" :code="getCode()" v-else-if="detail.hasChart === 1"/>
-        <index-detail :data="detail" :code="getCode()" v-else/>
+        <index-detail-data :data="detail" :code="code" v-if="detail.dataOnly === 1"/>
+        <index-detail-chart :data="detail" :code="code" v-else-if="detail.hasChart === 1"/>
+        <index-detail :data="detail" :code="code" v-else/>
       </div>
 
     </div>
@@ -50,19 +60,38 @@
     data() {
       return {
         title: this.getTitle(),
+        code: this.getCode(),
         dateShow: false,
         list: null,
-        activeDate: 0
+        activeDate: 0,
+        select: {
+          options: [{
+            value: 'my-dafy',
+            label: '个人中心'
+          }, {
+            value: 'vip-loan',
+            label: '豪有钱'
+          }],
+          value: 'vip-loan'
+        }
       }
     },
     mounted() {
       this.getIndexList();
     },
+    beforeDestroy() {
+      this.$store.commit('clearAppName');
+    },
     methods: {
       datePick: function () {
         this.dateShow = !this.dateShow
       },
+      change: function() {
+        this.$store.commit('updateAppName', this.select.value);
+        this.refresh();
+      },
       refresh: function () {
+        console.log(this.select.value);
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       getTitle: function () {
@@ -74,7 +103,7 @@
         return indexTitles[code].code;
       },
       async getIndexList() {
-        indexList(this.getCode()).then(res => {
+        indexList(this.code).then(res => {
           this.list = res.data.data;
         });
       }
