@@ -84,7 +84,7 @@
 
       setOptions: function(charts) {
         this.chart.clear();
-        if (charts === null || charts.length === undefined) {
+        if (charts === null || charts.length === undefined || charts.length === 0) {
           return;
         }
 

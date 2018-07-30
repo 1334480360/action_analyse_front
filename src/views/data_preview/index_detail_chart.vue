@@ -1,3 +1,4 @@
+<!--图表-->
 <template>
   <div class="widget-container" data-chart-type="line" data-widgetid="15" data-size="normal">
     <div class="widget-content-container">
@@ -67,7 +68,7 @@
           <keep-alive>
             <line-chart :chart-data="detail.charts" :total-show="data.hasStat == 1" v-if="data.chartType === 'line'"></line-chart>
             <bar-chart :chart-data="detail.charts" :total-show="data.hasStat == 1" v-else-if="data.chartType === 'column'"></bar-chart>
-            <pie-chart :total-show="data.hasStat == 1" v-else-if="data.chartType === 'pie'"></pie-chart>
+            <pie-chart :chart-data="detail.charts" :total-show="data.hasStat == 1" v-else-if="data.chartType === 'pie'"></pie-chart>
             <line-area-chart :chart-data="detail.charts" :total-show="data.hasStat == 1" v-else-if="data.chartType === 'areaspline'"></line-area-chart>
           </keep-alive>
         </div>

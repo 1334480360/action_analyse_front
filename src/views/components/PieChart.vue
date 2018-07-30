@@ -21,6 +21,13 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    chartData: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
     }
   },
   data() {
@@ -45,9 +52,34 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
+    }
+  },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el, 'macarons');
+      this.setOptions(this.chartData)
+    },
+    setOptions: function (charts) {
+      this.chart.clear();
+      if (charts === null || charts.length === undefined || charts.length === 0) {
+        return;
+      }
+
+      //横坐标值
+      let xAxisSet = new Set();
+      //维度
+      let seriesName = null;
+      charts.map(val => {
+        seriesName = val.seriesName;
+        xAxisSet.add(val.name);
+      });
+
 
       this.chart.setOption({
         tooltip: {
@@ -55,25 +87,20 @@ export default {
           formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         legend: {
+          type: 'scroll',
           left: 'center',
-          bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          bottom: 10,
+          data: Array.from(xAxisSet)
         },
         calculable: true,
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: seriesName,
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: charts,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

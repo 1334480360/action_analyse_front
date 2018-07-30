@@ -1,3 +1,4 @@
+<!--只有数字-->
 <template>
   <div class="widget-container" data-chart-type="number" data-widgetid="92" data-size="normal">
     <div class="widget-content-container">
