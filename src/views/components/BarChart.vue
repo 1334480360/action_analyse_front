@@ -7,6 +7,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
+import {formatStrToDate} from "../../assets/common";
 
 const animationDuration = 6000
 
@@ -68,6 +69,9 @@ export default {
       this.setOptions(this.chartData);
     },
     sort: function (a, b) {
+      if (isNaN(a)) {
+        return formatStrToDate(a) - formatStrToDate(b);
+      }
       return a - b;
     },
     setOptions: function(charts) {

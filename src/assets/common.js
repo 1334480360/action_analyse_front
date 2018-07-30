@@ -11,7 +11,7 @@ export function formatCurrency(num, unit) {
     return num;
   }
 
-  if(unit !== '元'){
+  if (unit !== '元') {
     return formatNum(num);
   }
 
@@ -35,8 +35,8 @@ export function formatCurrency(num, unit) {
  * @param num
  */
 function formatNum(num) {
-  var t = parseInt(num), i, r;
-  for (t = t.toString().replace(/^(\d*)$/, "$1."), t = (t + "00").replace(/(\d*\.\d\d)\d*/, "$1"), t = t.replace(".", ","), i = /(\d)(\d{3},)/; i.test(t); )
+  let t = parseInt(num), i, r;
+  for (t = t.toString().replace(/^(\d*)$/, "$1."), t = (t + "00").replace(/(\d*\.\d\d)\d*/, "$1"), t = t.replace(".", ","), i = /(\d)(\d{3},)/; i.test(t);)
     t = t.replace(i, "$1,$2");
   return t = t.replace(/,(\d\d)$/, ".$1"), r = t.split("."), r[1] == "00" && (t = r[0]), t
 }
@@ -60,4 +60,15 @@ export function formatDate(date, fmt) { //author: meizz
   for (let k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
+}
+
+/**
+ * @title：字符串转日期
+ * @author：xuan
+ * @date：2018/7/30
+ */
+export function formatStrToDate(s) {
+  s = s.replace(/-/g,"/");
+  s = s.replace(/(\.\d+)?/g,"");
+  return new Date(s);
 }
