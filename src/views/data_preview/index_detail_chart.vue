@@ -122,9 +122,6 @@
       this.$store.commit('clearChartList')
     },
     methods: {
-      tip: function (desc) {
-        console.log(desc);
-      },
       async getIndexDetail() {
         indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate, this.appName).then(res => {
           this.detail = res.data.data;

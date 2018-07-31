@@ -96,7 +96,6 @@
         this.refresh();
       },
       refresh: function () {
-        console.log(this.select.value);
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       getTitle: function () {
