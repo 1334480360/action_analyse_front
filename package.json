@@ -12,7 +12,7 @@
     "test": "npm run lint",
     "precommit": "lint-staged",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "cross-env BABEL_ENV=development env_config=dev node build/build.js"
   },
   "lint-staged": {
     "src/**/*.{js,vue}": [
