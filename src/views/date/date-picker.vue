@@ -2,10 +2,13 @@
   <div class="block, left">
     <!--<span class="demonstration">时间选择</span>-->
     <el-date-picker
+      id="datePicker"
       v-model="value7"
       type="daterange"
       align="right"
       unlink-panels
+      :clearable="false"
+      :editable="false"
       range-separator="至"
       :start-placeholder="beginDate"
       :end-placeholder="endDate"

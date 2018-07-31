@@ -58,6 +58,10 @@ export function unitConvert(num, unit) {
  * @date：2018/7/30
  */
 export function numConvert(num, unit) {
+  if(isNaN(num)){
+    return num;
+  }
+
   num = parseFloat(num);
   if (num >= 10000 * 10000 * 10000) {
     return formatCurrency(num/(10000 * 10000 * 10000), unit);
@@ -120,4 +124,32 @@ export function formatStrToDate(s) {
   s = s.replace(/-/g,"/");
   s = s.replace(/(\.\d+)?/g,"");
   return new Date(s);
+}
+
+/**
+ * @title：是否上升
+ * @author：xuan
+ * @date：2018/7/31
+ */
+export function isRise(val) {
+  if(val === null){
+    return true;
+  }
+
+  val += '';
+  return val.indexOf("-") === -1;
+}
+
+/**
+ * @title：remove
+ * @author：xuan
+ * @date：2018/7/31
+ */
+export function remove(val) {
+  if(val === null){
+    return val;
+  }
+
+  val += '';
+  return val.split('-')[1];
 }

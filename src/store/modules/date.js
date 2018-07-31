@@ -10,7 +10,7 @@ const date = {
     endDate: this.beginDate,
     autoRefreshChartList: [],
     autoRefreshCode: '',
-    appName: 'vip-loan'
+    appName: null
   },
   mutations: {
     addToAutoRefreshChartList (state, chart) {

@@ -76,6 +76,11 @@
         }
       }
     },
+    created() {
+      if(this.code === 'OPERATE'){
+        this.$store.commit('updateAppName', 'vip-loan');
+      }
+    },
     mounted() {
       this.getIndexList();
     },
