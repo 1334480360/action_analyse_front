@@ -89,7 +89,6 @@
   import LineAreaChart from '../components/LineAreaChart'
   import PieChart from '../components/PieChart'
   import BarChart from '../components/BarChart'
-  import BoxCard from '../components/BoxCard'
 
   import {indexDetail} from "../../api/module_index";
   import {unitConvert} from '../../assets/common';
@@ -104,8 +103,7 @@
       LineChart,
       LineAreaChart,
       PieChart,
-      BarChart,
-      BoxCard
+      BarChart
     },
     data() {
       return {

@@ -17,8 +17,8 @@
         </el-select>
         <div class="pull-right">
           <date-picker v-show="dateShow"/>
-          <button class="el-button el-button--primary el-button--medium" @click="datePick" style="font-size: 13px">日期</button>
-          <button class="el-button el-button--primary el-button--medium" @click="refresh" style="font-size: 13px">刷新</button>
+          <el-button @click="datePick" icon="el-icon-date" style="width: 55px;"></el-button>
+          <el-button @click="refresh" icon="el-icon-refresh" style="width: 55px;"></el-button>
         </div>
       </div>
 

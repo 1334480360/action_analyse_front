@@ -106,7 +106,7 @@ export const asyncRouterMap = [
     },
     children: [{
       path: 'event',
-      component: () => import('@/views/action_analyse/event/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'event',
       meta: {
         title: 'event',
@@ -114,7 +114,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'funnel',
-      component: () => import('@/views/action_analyse/funnel/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'funnel',
       meta: {
         title: 'funnel',
@@ -122,7 +122,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'retain',
-      component: () => import('@/views/action_analyse/retain/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'retain',
       meta: {
         title: 'retain',
@@ -130,7 +130,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'distribution',
-      component: () => import('@/views/action_analyse/distribution/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'distribution',
       meta: {
         title: 'distribution',
@@ -138,7 +138,7 @@ export const asyncRouterMap = [
       }
     },  {
       path: 'user_path',
-      component: () => import('@/views/action_analyse/user_path/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'user_path',
       meta: {
         title: 'user_path',
@@ -146,7 +146,7 @@ export const asyncRouterMap = [
       }
     },  {
       path: 'duration',
-      component: () => import('@/views/action_analyse/duration/index'),
+      component: () => import('@/views/action_analyse/index'),
       name: 'duration',
       meta: {
         title: 'duration',

@@ -3212,33 +3212,33 @@ html:lang(en) .sa-body .daterangepicker .ranges li:first-child {
   }
 }
 
-.sa-body.sa-body-hide4 {
+sa-body-hide4 {
   padding-top: 0
 }
 
-.sa-body.sa-body-hide4 .sa-head {
+sa-body-hide4 .sa-head {
   display: none
 }
 
-.sa-body.sa-body-hide4 .sa-sidebar {
+sa-body-hide4 .sa-sidebar {
   display: none
 }
 
-.sa-body.sa-body-hide4 .sa-main {
+sa-body-hide4 .sa-main {
   padding-left: 0
 }
 
-.sa-body.sa-body-hide4 .sa-main > div:nth-child(2) .fixed-top-bar {
+sa-body-hide4 .sa-main > div:nth-child(2) .fixed-top-bar {
   top: 0;
   width: 100%
 }
 
-.sa-body.sa-email [data-email=no] {
+sa-email [data-email=no] {
   display: none !important
 }
 
 @media (max-width: 799px) {
-  .sa-body.sa-need-show-import-btn {
+  sa-need-show-import-btn {
     padding-top: 105px
   }
 }
@@ -3919,12 +3919,12 @@ html:lang(en) .sa-body .daterangepicker .ranges li:first-child {
   height: 100%
 }
 
-.sa-main > div:nth-child(2) .fixed-top-bar {
-  position: fixed;
-  top: 55px;
+.fixed-top-bar {
+  position: relative;
+  top: 0px;
   z-index: 99;
   width: 100%;
-  width: calc(100% - 240px);
+  /*width: calc(100% - 240px);*/
   background-color: #fff
 }
 

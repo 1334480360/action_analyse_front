@@ -96,17 +96,34 @@ export default {
       //维度列表
       let seriesMap = new Map();
       charts.map(val1 => {
-        let seriesArr = [];
         val1.datas.map(val2 => {
           xAxisSet.add(val2.date);
-          seriesArr.push(val2.value);
         });
-        seriesMap.set(val1.dimension, seriesArr);
+      });
+      let xAxisArr = Array.from(xAxisSet).sort(this.sort);
+      let length = xAxisArr.length;
+
+      //数据和坐标对应
+      charts.map(val1 => {
+        let seriesList = [];
+        for (let i = 0; i < length; i++) {
+          seriesList[i] = 0;
+        }
+
+        val1.datas.map(val2 => {
+          for (let i = 0; i < length; i++) {
+            if (xAxisArr[i] === val2.date) {
+              seriesList.splice(i, 0, val2.value);
+              break;
+            }
+          }
+        });
+        seriesMap.set(val1.dimension, seriesList.slice(0, length));
       });
 
       this.chart.setOption({
         xAxis: {
-          data: Array.from(xAxisSet).sort(this.sort),
+          data: xAxisArr,
           boundaryGap: true,
           axisTick: {
             show: false

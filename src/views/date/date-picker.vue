@@ -5,11 +5,11 @@
       id="datePicker"
       v-model="value7"
       type="daterange"
-      align="right"
+      align="left"
       unlink-panels
       :clearable="false"
       :editable="false"
-      range-separator="至"
+      range-separator="——"
       :start-placeholder="beginDate"
       :end-placeholder="endDate"
       placeholder="选择日期"
@@ -17,6 +17,7 @@
       value-format="yyyy-MM-dd"
       :picker-options="pickerOptions2"
       @change="datePickChange"
+      style="width: 260px;"
     >
     </el-date-picker>
   </div>

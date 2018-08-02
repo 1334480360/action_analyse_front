@@ -16,6 +16,9 @@ const getters = {
   errorLogs: state => state.errorLog.logs,
   autoRefreshCode: state => state.date.autoRefreshCode,
   autoRefreshChartList: state => state.date.autoRefreshChartList,
-  appName: state => state.date.appName
+  appName: state => state.date.appName,
+  eventItems: state => state.date.eventItems,
+  groupItems: state => state.date.groupItems,
+  filterItems: state => state.date.filterItems,
 };
 export default getters
