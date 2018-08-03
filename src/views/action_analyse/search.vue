@@ -10,7 +10,7 @@
     <section class="report-ops" id="report-ops">
       <div class="ops-item measures-container">
         <!--事件-->
-        <search-event v-for="(item, index) in eventItems" :index="index" :key="item"></search-event>
+        <search-event v-for="(item, index) in eventItems" :index="index" :key="index"></search-event>
         <!--＋号-->
         <button @click="eventAdd" type="button" class="event-measure-add-new" data-placement="right">
           <span class="icon-new"></span>
@@ -20,7 +20,7 @@
       <!--按分组查看-->
       <div id="segmentation-group-hold-place" class="ops-item">
         <!--分组-->
-        <search-group v-for="(item, index) in groupItems" :index="index" :key="item"></search-group>
+        <search-group v-for="(item, index) in groupItems" :index="index" :key="index"></search-group>
       </div>
 
       <!--筛选条件-->
@@ -46,7 +46,8 @@
     },
     computed: {
       ...mapGetters(['eventItems']),
-      ...mapGetters(['groupItems'])
+      ...mapGetters(['groupItems']),
+      ...mapGetters(['eventParam'])
     },
     beforeDestroy() {
       this.$store.commit('initEventItems');
@@ -55,6 +56,9 @@
     methods: {
       eventAdd: function () {
         this.$store.commit('addEventItems');
+
+        this.$store.commit('addEventParamEvent');
+        this.$store.commit('updateEventParam', this.eventParam);
       }
     }
   }

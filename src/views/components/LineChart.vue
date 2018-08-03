@@ -73,7 +73,7 @@ export default {
     chartData: {
       deep: true,
       handler(val) {
-        this.setOptions(val)
+        this.setOptions(val);
       }
     }
   },
@@ -87,7 +87,13 @@ export default {
 
     setOptions: function(charts) {
       this.chart.clear();
+      this.chart.showLoading({
+        text: '查询中...',
+        textStyle: { fontSize : 30 , color: '#61C283' },
+        effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+      });
       if (charts === null || charts.length === undefined || charts.length === 0) {
+        this.chart.hideLoading();
         return;
       }
 
@@ -97,7 +103,9 @@ export default {
       let seriesMap = new Map();
       charts.map(val1 => {
         val1.datas.map(val2 => {
-          xAxisSet.add(val2.date);
+          if(val2.date !== '合计'){
+            xAxisSet.add(val2.date);
+          }
         });
       });
       let xAxisArr = Array.from(xAxisSet).sort(this.sort);
@@ -111,10 +119,12 @@ export default {
         }
 
         val1.datas.map(val2 => {
-          for (let i = 0; i < length; i++) {
-            if (xAxisArr[i] === val2.date) {
-              seriesList.splice(i, 0, val2.value);
-              break;
+          if(val2.date !== '合计'){
+            for (let i = 0; i < length; i++) {
+              if (xAxisArr[i] === val2.date) {
+                seriesList.splice(i, 0, val2.value);
+                break;
+              }
             }
           }
         });
@@ -164,7 +174,8 @@ export default {
             data: seriesMap.get(val.dimension)
           }
         }),
-      })
+      });
+      this.chart.hideLoading();
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons');

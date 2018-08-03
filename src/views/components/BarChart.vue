@@ -75,11 +75,13 @@ export default {
     },
     setOptions: function(charts) {
       this.chart.clear();
-      if (charts === null) {
-        return;
-      }
-      this.chart.clear();
+      this.chart.showLoading({
+        text: '查询中...',
+        textStyle: { fontSize : 30 , color: '#61C283' },
+        effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+      });
       if (charts === null || charts.length === undefined) {
+        this.chart.hideLoading();
         return;
       }
 
@@ -138,7 +140,8 @@ export default {
             data: seriesMap.get(val.dimension)
           }
         })
-      })
+      });
+      this.chart.hideLoading();
     }
 
   }

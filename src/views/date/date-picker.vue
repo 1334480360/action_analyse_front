@@ -2,7 +2,6 @@
   <div class="block, left">
     <!--<span class="demonstration">时间选择</span>-->
     <el-date-picker
-      id="datePicker"
       v-model="value7"
       type="daterange"
       align="left"
@@ -25,11 +24,15 @@
 
 <script>
   import {formatDate} from "../../assets/common";
+  import {mapGetters} from 'vuex'
   //默认取昨天
   const end = new Date();
   end.setDate(end.getDate() - 1);
 
   export default {
+    computed: {
+      ...mapGetters(['eventParam'])
+    },
     methods: {
       datePickChange: function (val) {
         if (val === null) {
@@ -39,6 +42,16 @@
         this.GLOBAL.beginDate = val[0];
         this.GLOBAL.endDate = val[1];
         this.$store.commit('updateAutoRefreshCode', Math.random())
+
+        //事件分析
+        this.eventParam.beginDate = this.GLOBAL.beginDate;
+        this.eventParam.endDate = this.GLOBAL.endDate;
+        if (this.eventParam.granularity === 'minute') {
+          this.eventParam.beginDate = this.eventParam.endDate;
+          this.GLOBAL.beginDate = this.GLOBAL.endDate;
+          this.$message('按分钟查看，时间范围最多展示一天');
+        }
+        this.$store.commit('updateEventParam', this.eventParam);
       }
     },
     data() {

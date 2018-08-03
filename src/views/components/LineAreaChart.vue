@@ -87,7 +87,13 @@
 
       setOptions: function(charts) {
         this.chart.clear();
+        this.chart.showLoading({
+          text: '查询中...',
+          textStyle: { fontSize : 30 , color: '#61C283' },
+          effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         if (charts === null || charts.length === undefined || charts.length === 0) {
+          this.chart.hideLoading();
           return;
         }
 
@@ -145,15 +151,15 @@
               type: 'line',
               itemStyle: {
                 normal: {
-                  areaStyle: {
-                  }
+                  areaStyle: {}
                 }
               },
               animationDuration: 2800,
               data: seriesMap.get(val.dimension)
             }
           }),
-        })
+        });
+        this.chart.hideLoading();
       },
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');

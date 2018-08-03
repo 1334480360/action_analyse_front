@@ -20,7 +20,7 @@
             </el-select>
           </div>
           <div class="dropdown">
-            <el-select v-model="value2" placeholder="" style="width: 90px">
+            <el-select v-model="value2" placeholder="" style="width: 90px" @change="paramChange">
               <el-option
                 v-for="item in options2"
                 :key="item.value"
@@ -43,10 +43,25 @@
 
 <script>
   import DatePicker from '../date/date-picker'
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'chart_search',
     components: {
       DatePicker
+    },
+    computed: {
+      ...mapGetters(['eventParam'])
+    },
+    methods: {
+      paramChange: function () {
+        this.eventParam.granularity = this.value2;
+        if(this.value2 === 'minute'){
+          this.eventParam.beginDate = this.eventParam.endDate;
+          this.$message('按分钟查看，时间范围最多展示一天');
+        }
+        this.$store.commit('updateEventParam', this.eventParam);
+      }
     },
     data() {
       return {

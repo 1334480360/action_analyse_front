@@ -20,5 +20,6 @@ const getters = {
   eventItems: state => state.date.eventItems,
   groupItems: state => state.date.groupItems,
   filterItems: state => state.date.filterItems,
+  eventParam: state => state.date.eventParam,
 };
 export default getters

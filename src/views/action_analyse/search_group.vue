@@ -3,7 +3,7 @@
   <div class="group-control-item">
     按
     <div class="selector property">
-      <el-select v-model="value3" placeholder="请选择" filterable style="width: 180px">
+      <el-select v-model="value3" placeholder="请选择" filterable style="width: 180px" @change="paramChange">
         <el-option-group
           v-for="group in options3"
           :key="group.label"
@@ -18,12 +18,13 @@
       </el-select>
     </div>
     查看
-    <button type="button" class="btn-icon btn-link" @click="groupRemove" v-show="(this.index === (this.groupItems.length - 1)) && this.groupItems.length > 1">
-      <span class="icon-remove"></span>
-    </button>
-    <button type="button" class="btn-icon btn-link" @click="groupAdd" v-show="this.index === (this.groupItems.length - 1)">
-      <span class="icon-add"></span>
-    </button>
+    <!--todo 先控制只有一个分组-->
+    <!--<button type="button" class="btn-icon btn-link" @click="groupRemove" v-show="(this.index === (this.groupItems.length - 1)) && this.groupItems.length > 1">-->
+      <!--<span class="icon-remove"></span>-->
+    <!--</button>-->
+    <!--<button type="button" class="btn-icon btn-link" @click="groupAdd" v-show="this.index === (this.groupItems.length - 1)" style="text-decoration: none;">-->
+      <!--<span class="icon-add"></span>-->
+    <!--</button>-->
   </div>
 </template>
 
@@ -39,7 +40,8 @@
       }
     },
     computed: {
-      ...mapGetters(['groupItems'])
+      ...mapGetters(['groupItems']),
+      ...mapGetters(['eventParam'])
     },
     methods: {
       groupAdd: function () {
@@ -47,6 +49,10 @@
       },
       groupRemove: function () {
         this.$store.commit('removeGroupItems');
+      },
+      paramChange: function () {
+        this.eventParam.dimensions[0] = this.value3;
+        this.$store.commit('updateEventParam', this.eventParam);
       }
     },
     data() {
@@ -54,29 +60,29 @@
         options3: [{
           label: '总体',
           options: [{
-            value: '',
+            value: '1',
             label: '总体'
           }]
         }, {
           label: '事件属性',
           options: [{
-            value: 'ip',
-            label: 'IP'
+            value: '24',
+            label: '操作系统'
           }, {
-            value: 'country',
-            label: '国家'
+            value: '21',
+            label: '屏幕宽度'
           }]
         }, {
           label: '用户属性',
           options: [{
-            value: 'name',
-            label: '姓名'
+            value: '49',
+            label: '省份'
           }, {
-            value: 'gender',
-            label: '性别'
+            value: '51',
+            label: '手机运营商'
           }]
         }],
-        value3: '',
+        value3: '1',
       }
     }
   }

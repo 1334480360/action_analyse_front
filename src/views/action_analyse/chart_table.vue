@@ -1,40 +1,33 @@
 <!--搜索条件-->
 <template>
-  <section id="table-container" class="report-chart" style="">
-      <div style="display:none;" class="sa-tab tab-table">
-        <a data-method="switch-left" class="active"></a>
-        <a data-method="switch-right"></a>
-        <a data-method="switch-ratio" style="display:none;">时间对比变化率</a>
-      </div>
+  <section id="table-container" class="report-chart">
       <div class="table-wrap">
         <el-table
           :data="tableData"
           border
           style="width: 100%; font-weight: 400;">
           <el-table-column
-            fixed
-            prop="date"
-            label="日期">
+            prop="group"
+            label="分组"
+            v-show="!isTotal"
+          >
           </el-table-column>
           <el-table-column
-            prop="name"
-            label="姓名">
+            prop="dimension"
+            label="指标">
           </el-table-column>
           <el-table-column
-            prop="province"
-            label="省份">
+            prop="ammount"
+            label="合计">
           </el-table-column>
           <el-table-column
-            prop="city"
-            label="市区">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
-          </el-table-column>
-          <el-table-column
-            prop="zip"
-            label="邮编">
+            :label="date"
+            v-for="(date, index) in dateArr"
+            :key="index"
+          >
+            <template slot-scope="scope">
+              {{scope.row.dates[index]}}
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -45,42 +38,22 @@
 <script>
   export default {
     name: 'chart-table',
-    methods: {
-      handleClick(row) {
-        console.log(row);
-      }
-    },
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+    props: {
+      isTotal: {
+        type: Boolean,
+        required: true
+      },
+      tableData: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      dateArr: {
+        type: Array,
+        default () {
+          return []
+        }
       }
     }
   }

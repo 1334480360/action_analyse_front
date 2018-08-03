@@ -21,7 +21,7 @@
 
     <!--筛选条件按钮-->
     <div class="ops-item">
-      <button type="button" class="btn btn-link" @click="filterAdd">
+      <button type="button" class="btn btn-link" @click="filterAdd" style="text-decoration: none;">
         <span class="icon-add"></span><span>筛选条件</span>
       </button>
     </div>
@@ -40,7 +40,8 @@
       SearchFilter
     },
     computed: {
-      ...mapGetters(['filterItems'])
+      ...mapGetters(['filterItems']),
+      ...mapGetters(['eventParam'])
     },
     methods: {
       relationSwitch: function () {
@@ -49,6 +50,9 @@
         } else {
           this.relation = 'and';
         }
+
+        this.eventParam.filter.relation = this.relation;
+        this.$store.commit('updateEventParam', this.eventParam);
       },
       filterAdd: function () {
         this.$store.commit('addFilterItems');

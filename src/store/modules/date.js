@@ -3,6 +3,8 @@ import {formatDate} from "../../assets/common";
 //默认取昨天
 let day1 = new Date();
 day1.setDate(day1.getDate() - 1);
+let day2 = new Date();
+day2.setDate(day1.getDate() - 7);
 
 const date = {
   state: {
@@ -14,6 +16,30 @@ const date = {
     eventItems: ['A'],
     groupItems: [0],
     filterItems: [],
+    eventParam: {
+      beginDate: formatDate(day2, 'yyyy-MM-dd'),
+      endDate: formatDate(day1, 'yyyy-MM-dd'),
+      granularity: "day",
+      dimensions: [0],
+      events: [
+        {
+          pageName: "",
+          eventName: "",
+          metric: "total_count"
+        }
+      ],
+      filter: {
+        relation: "",
+        conditions: [
+          // {
+          //   dimensionCode: 0,
+          //   function: "",
+          //   params: []
+          // }
+        ]
+      },
+      productName: "my-dafy"
+    }
   },
   mutations: {
     addToAutoRefreshChartList (state, chart) {
@@ -48,7 +74,7 @@ const date = {
       state.eventItems.splice(state.eventItems.length - 1)
     },
     initEventItems (state) {
-      state.eventItems = [0]
+      state.eventItems = ['A']
     },
 
     addGroupItems (state) {
@@ -68,7 +94,35 @@ const date = {
       state.filterItems.splice(state.filterItems.length - 1)
     },
     initFilterItems (state) {
-      state.filterItems = [0]
+      state.filterItems = []
+    },
+
+    updateEventParam (state, param) {
+      state.eventParam = null;
+      state.eventParam = param
+    },
+    addEventParamEvent (state) {
+      let event = {
+        pageName: "",
+        eventName: "",
+        metric: "total_count"
+      };
+      state.eventParam.events.push(event)
+    },
+    removeEventParamEvent (state) {
+      state.eventParam.events.splice(state.eventParam.events.length - 1)
+    },
+
+    // updateEventParamFilter (state, relation) {
+    //   if(relation !== null){
+    //     state.eventParam.filter.relation = relation;
+    //   }
+    // },
+    removeEventParamFilter (state) {
+      state.eventParam.filter.conditions.splice(state.eventParam.filter.conditions.length - 1);
+      if(state.eventParam.filter.conditions.length <= 1){
+        state.eventParam.filter.relation = ''
+      }
     },
 
 
