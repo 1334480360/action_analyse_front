@@ -16,11 +16,12 @@ const date = {
     eventItems: ['A'],
     groupItems: [0],
     filterItems: [],
+    chartType: 'line',
     eventParam: {
       beginDate: formatDate(day2, 'yyyy-MM-dd'),
       endDate: formatDate(day1, 'yyyy-MM-dd'),
       granularity: "day",
-      dimensions: [0],
+      dimensions: [1],
       events: [
         {
           pageName: "",
@@ -31,11 +32,6 @@ const date = {
       filter: {
         relation: "",
         conditions: [
-          // {
-          //   dimensionCode: 0,
-          //   function: "",
-          //   params: []
-          // }
         ]
       },
       productName: "my-dafy"
@@ -113,16 +109,15 @@ const date = {
       state.eventParam.events.splice(state.eventParam.events.length - 1)
     },
 
-    // updateEventParamFilter (state, relation) {
-    //   if(relation !== null){
-    //     state.eventParam.filter.relation = relation;
-    //   }
-    // },
     removeEventParamFilter (state) {
       state.eventParam.filter.conditions.splice(state.eventParam.filter.conditions.length - 1);
       if(state.eventParam.filter.conditions.length <= 1){
         state.eventParam.filter.relation = ''
       }
+    },
+
+    updateChartType (state, param) {
+      state.chartType = param
     },
 
 

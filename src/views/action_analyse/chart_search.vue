@@ -10,7 +10,7 @@
 
         <div class="report-config btn-group">
           <div class="dropdown">
-            <el-select v-model="value1" placeholder="线图" style="width: 80px">
+            <el-select v-model="value1" placeholder="线图" style="width: 80px" @change="chartChange">
               <el-option
                 v-for="item in options1"
                 :key="item.value"
@@ -44,6 +44,7 @@
 <script>
   import DatePicker from '../date/date-picker'
   import {mapGetters} from 'vuex'
+  import RefreshHandler from '../../utils/refresh-handler'
 
   export default {
     name: 'chart_search',
@@ -51,7 +52,14 @@
       DatePicker
     },
     computed: {
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['chartType'])
+    },
+    watch: {
+      chartType() {
+        console.log('watch chartType------');
+        this.value1 = this.chartType;
+      }
     },
     methods: {
       paramChange: function () {
@@ -61,6 +69,14 @@
           this.$message('按分钟查看，时间范围最多展示一天');
         }
         this.$store.commit('updateEventParam', this.eventParam);
+      },
+      chartChange: function () {
+        if(this.value1 === 'pie' && this.eventParam.dimensions[0] === 1){
+          this.$message('饼图只适用于有分组的查询');
+          this.value1 = this.chartType;
+          return;
+        }
+        this.$store.commit('updateChartType', this.value1);
       }
     },
     data() {
@@ -69,16 +85,13 @@
           value: 'line',
           label: '线图'
         }, {
-          value: 'column',
+          value: 'bar',
           label: '柱图'
         }, {
           value: 'pie',
           label: '饼图'
-        }, {
-          value: 'areaspline',
-          label: '累积'
         }],
-        value1: 'line',
+        value1: this.chartType || 'line',
 
 
         options2: [{

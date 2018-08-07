@@ -92,8 +92,10 @@ export default {
       charts.map(val1 => {
         let seriesArr = [];
         val1.datas.map(val2 => {
-          xAxisSet.add(val2.date);
-          seriesArr.push(val2.value);
+          if(val2.date !== '合计'){
+            xAxisSet.add(val2.date);
+            seriesArr.push(val2.value);
+          }
         });
         seriesMap.set(val1.dimension, seriesArr);
       });
@@ -127,6 +129,7 @@ export default {
           }
         }],
         legend: {
+          type: 'scroll',
           bottom: 'bottom',
           data: charts.map(val => {
             return val.dimension;

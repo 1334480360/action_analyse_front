@@ -41,7 +41,8 @@
     },
     computed: {
       ...mapGetters(['groupItems']),
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['chartType']),
     },
     methods: {
       groupAdd: function () {
@@ -53,6 +54,11 @@
       paramChange: function () {
         this.eventParam.dimensions[0] = this.value3;
         this.$store.commit('updateEventParam', this.eventParam);
+
+        if(this.eventParam.dimensions[0] === 1 && this.chartType === 'pie'){
+          this.$message('饼图只适用于有分组的查询');
+          this.$store.commit('updateChartType', 'line');
+        }
       }
     },
     data() {
@@ -60,29 +66,29 @@
         options3: [{
           label: '总体',
           options: [{
-            value: '1',
+            value: 1,
             label: '总体'
           }]
         }, {
           label: '事件属性',
           options: [{
-            value: '24',
+            value: 24,
             label: '操作系统'
           }, {
-            value: '21',
+            value: 21,
             label: '屏幕宽度'
           }]
         }, {
           label: '用户属性',
           options: [{
-            value: '49',
+            value: 49,
             label: '省份'
           }, {
-            value: '51',
+            value: 51,
             label: '手机运营商'
           }]
         }],
-        value3: '1',
+        value3: 1,
       }
     }
   }

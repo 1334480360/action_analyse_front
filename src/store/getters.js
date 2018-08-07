@@ -21,5 +21,6 @@ const getters = {
   groupItems: state => state.date.groupItems,
   filterItems: state => state.date.filterItems,
   eventParam: state => state.date.eventParam,
+  chartType: state => state.date.chartType,
 };
 export default getters

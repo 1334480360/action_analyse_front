@@ -27,9 +27,11 @@
       <!--图表模块-->
       <section class="report-chart"
                style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent;">
-        <keep-alive>
-          <line-chart :chart-data="charts" :total-show="false" v-loading="loading"></line-chart>
-        </keep-alive>
+        <!--<keep-alive>-->
+          <line-chart :chart-data="charts" :total-show="false" v-loading="loading" v-if="this.chartType === 'line'"></line-chart>
+          <bar-chart :chart-data="charts" :total-show="false" v-loading="loading" v-else-if="this.chartType === 'bar'"></bar-chart>
+          <pie-chart :chart-data="pieData" :total-show="false" v-loading="loading" v-else-if="this.chartType === 'pie'"></pie-chart>
+        <!--</keep-alive>-->
       </section>
 
       <!--间隔面板-->
@@ -100,7 +102,8 @@
       BarChart
     },
     computed: {
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['chartType'])
     },
     created() {
       this.GLOBAL.beginDate = this.eventParam.beginDate;
@@ -138,7 +141,7 @@
           let chart0 = data[i].charts;
           for (let j=0; j<chart0.length; j++) {
             let chart00 = chart0[j];
-            if(this.eventParam.dimensions[0] > 0){
+            if(this.eventParam.dimensions[0] > 1){
               //分组名称
               chart00.dimension = chart00.datas[1].name + '-' + chart00.dimension;
               chart00.datas.splice(0, 1);
@@ -196,7 +199,39 @@
         }
 
         this.tableData.sort(this.sortByLetter);
+      },
+      setPieData: function (data) {
+        this.pieData = [];
+        let dateSet = new Set();
+        let dataArr = [];
 
+        for (let i=0; i<data.length; i++) {
+          let chart0 = data[i].charts;
+          for (let j=0; j<chart0.length; j++) {
+            let chart00 = chart0[j];
+            let datas = chart0[j].datas;
+            for (let k=0; k<datas.length; k++) {
+              let date = datas[k];
+              date.dimension = chart00.dimension;
+              if(date.date !== '合计'){
+                dateSet.add(date.date);
+              }
+            }
+            dataArr.push(datas);
+          }
+        }
+
+        for (let i=0; i<dataArr.length; i++) {
+          let data0 = dataArr[i];
+          let tr = {};
+          tr.name = data0[1].name;
+          tr.seriesName = data0[1].dimension;
+          tr.value = data0[0].value;
+          tr.percent = 25;
+          this.pieData.push(tr);
+        }
+
+        console.log(JSON.parse(JSON.stringify(this.pieData)))
       },
       async getEventResult() {
         this.loading = true;
@@ -206,6 +241,7 @@
           //重新组装charts
           this.setCharts(JSON.parse(JSON.stringify(this.data)));
           this.setTableData(JSON.parse(JSON.stringify(this.data)));
+          this.setPieData(JSON.parse(JSON.stringify(this.data)));
 
           this.loading = false;
 
@@ -219,6 +255,7 @@
         data: [],
         charts: [],
         tableData: [],
+        pieData: [],
         dateArr: [],
         loading: true,
         options: [{
