@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 
 let baseUrl = 'http://10.10.11.137:8017/action-analyse';
+// let baseUrl = 'http://localhost:8017/action-analyse';
 
 //根据模块获取所有指标
 export function indexList(code) {
@@ -23,5 +24,14 @@ export function indexDetail (id, code, beginDate, endDate, appName) {
       endDate: endDate,
       appName: appName
     }
+  })
+}
+
+//获取事件分析结果
+export function eventResult (eventParam) {
+  return request({
+    url: baseUrl + '/analysis/event/getResult',
+    method: 'post',
+    data: eventParam
   })
 }
