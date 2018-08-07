@@ -60,7 +60,7 @@
 </script>
 
 <style scoped>
-  @import "../../styles/components.css";
-  @import "../../styles/compnent.index.css";
-  @import "../../styles/bootstrap.min.css";
+  @import "../../../styles/components.css";
+  @import "../../../styles/compnent.index.css";
+  @import "../../../styles/bootstrap.min.css";
 </style>

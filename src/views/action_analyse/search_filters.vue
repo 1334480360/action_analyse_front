@@ -2,7 +2,7 @@
 <template>
   <div>
 
-    <div id="filter-hold-place" class="ops-item">
+    <div id="filter-hold-place" class="ops-item" v-show="this.filterItems.length > 0">
       <div class="filter-group-control">
         <div id="filter-group-relation" class="filter-group-relation" v-show="this.filterItems.length > 1">
           <div class="relation-topline"></div>
@@ -13,7 +13,7 @@
           </button>
           <div class="relation-bottomline"></div>
         </div>
-        <div class="filter-contain" v-show="this.filterItems.length > 0">
+        <div class="filter-contain">
           <search-filter v-for="(item, index) in filterItems" :index="index" :key="index"></search-filter>
         </div>
       </div>

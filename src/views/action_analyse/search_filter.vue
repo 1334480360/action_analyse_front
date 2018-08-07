@@ -2,7 +2,7 @@
 <template>
   <div class="filter-item">
     <span class="property"></span>
-    <div class="selector property">
+    <div class="selector property" style="width: auto">
       <el-select v-model="value3" placeholder="请选择" filterable style="width: 180px" @change="paramChange">
         <el-option-group
           v-for="group in options3"

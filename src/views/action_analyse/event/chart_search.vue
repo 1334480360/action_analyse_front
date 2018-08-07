@@ -42,9 +42,9 @@
 </template>
 
 <script>
-  import DatePicker from '../date/date-picker'
+  import DatePicker from '../../date/date-picker'
   import {mapGetters} from 'vuex'
-  import RefreshHandler from '../../utils/refresh-handler'
+  import RefreshHandler from '../../../utils/refresh-handler'
 
   export default {
     name: 'chart_search',
@@ -117,9 +117,9 @@
 </script>
 
 <style scoped>
-  @import "../../styles/components.css";
-  @import "../../styles/compnent.index.css";
-  @import "../../styles/bootstrap.min.css";
+  @import "../../../styles/components.css";
+  @import "../../../styles/compnent.index.css";
+  @import "../../../styles/bootstrap.min.css";
 
   .btn-group {
     position: absolute;
