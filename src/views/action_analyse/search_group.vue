@@ -42,6 +42,7 @@
     computed: {
       ...mapGetters(['groupItems']),
       ...mapGetters(['eventParam']),
+      ...mapGetters(['funnelParam']),
       ...mapGetters(['chartType']),
     },
     methods: {
@@ -52,6 +53,7 @@
         this.$store.commit('removeGroupItems');
       },
       paramChange: function () {
+        //事件分析
         this.eventParam.dimensions[0] = this.value3;
         this.$store.commit('updateEventParam', this.eventParam);
 
@@ -59,6 +61,10 @@
           this.$message('饼图只适用于有分组的查询');
           this.$store.commit('updateChartType', 'line');
         }
+
+        //漏斗分析
+        this.funnelParam.dimensionCode = this.value3;
+        this.$store.commit('updateFunnelParam', this.funnelParam);
       }
     },
     data() {

@@ -4,7 +4,7 @@
     <section class="report-ops funnel-ops" style="">
       <div class="ops-item">
         <div>显示漏斗</div>
-        <el-select v-model="value" filterable placeholder="请选择漏斗" style="width: 130px;">
+        <el-select v-model="value" filterable placeholder="请选择漏斗" style="width: 130px;" @change="paramChange">
           <el-option
             v-for="item in funnels"
             :key="item.id"
@@ -31,8 +31,10 @@
 <script>
   import SearchGroup from '../search_group'
   import SearchFilters from '../search_filters'
+  import RefreshHandler from '../../../utils/refresh-handler'
 
   import {funnelList} from "../../../api/module_index";
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'search',
@@ -40,8 +42,23 @@
       SearchGroup,
       SearchFilters,
     },
+    computed: {
+      ...mapGetters(['funnelParam']),
+      ...mapGetters(['appName']),
+      ...mapGetters(['channel'])
+    },
     mounted() {
       this.getFunnelList();
+    },
+    watch: {
+      appName() {
+        console.log('watch appName------');
+        this.getFunnelList();
+      },
+      channel() {
+        console.log('watch channel------');
+        this.getFunnelList();
+      },
     },
     data() {
       return {
@@ -50,11 +67,17 @@
       }
     },
     methods: {
+      paramChange: function () {
+        this.funnelParam.id = this.value;
+        this.$store.commit('updateFunnelParam', this.funnelParam);
+      },
       async getFunnelList() {
         this.loading = true;
-        funnelList('vip-loan', 'wx').then(res => {
+        funnelList(this.appName, this.channel).then(res => {
           this.funnels = res.data.data;
           this.value = this.funnels[0].id;
+
+          this.paramChange();
 
           this.loading = false;
 

@@ -3,7 +3,7 @@
   <div>
     <!--漏斗图形-->
     <div style="padding: 10px 0; text-align: center;width: 360px; display: inline-block;" v-if="index === 0">
-      <svg data-step="$ALL" class="active" width="107" height="57" xmlns="http://www.w3.org/2000/svg">
+      <svg data-step="$ALL" :class="{'active' : activeFunnelIndex===index}" width="107" height="57" xmlns="http://www.w3.org/2000/svg" @click="switchFunnel">
         <g>
           <title></title>
           <g fill="none" fill-rule="evenodd">
@@ -21,7 +21,7 @@
     </div>
 
     <div style="padding: 10px 0; text-align: center;width: 360px;" v-else>
-      <svg data-step="0" width="100" height="44" xmlns="http://www.w3.org/2000/svg">
+      <svg data-step="0" :class="{'active' : activeFunnelIndex===index}" width="100" height="44" xmlns="http://www.w3.org/2000/svg" @click="switchFunnel">
         <g>
           <g fill="none" fill-rule="evenodd">
             <g fill="#EAEFF4" class="active">
@@ -50,8 +50,13 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'funnel',
+    computed: {
+      ...mapGetters(['activeFunnelIndex'])
+    },
     props: {
       index: {
         required: true,
@@ -60,6 +65,11 @@
       funnel: {
         required: true,
         type: Object
+      }
+    },
+    methods: {
+      switchFunnel: function () {
+        this.$store.commit('updateActiveFunnelIndex', this.index);
       }
     }
   }

@@ -41,7 +41,8 @@
     },
     computed: {
       ...mapGetters(['filterItems']),
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['funnelParam'])
     },
     methods: {
       relationSwitch: function () {
@@ -50,9 +51,13 @@
         } else {
           this.relation = 'and';
         }
-
+        //事件分析
         this.eventParam.filter.relation = this.relation;
         this.$store.commit('updateEventParam', this.eventParam);
+
+        //漏斗分析
+        this.funnelParam.filter.relation = this.relation;
+        this.$store.commit('updateFunnelParam', this.funnelParam);
       },
       filterAdd: function () {
         this.$store.commit('addFilterItems');

@@ -17,10 +17,13 @@ const getters = {
   autoRefreshCode: state => state.date.autoRefreshCode,
   autoRefreshChartList: state => state.date.autoRefreshChartList,
   appName: state => state.date.appName,
+  channel: state => state.date.channel,
   eventItems: state => state.date.eventItems,
   groupItems: state => state.date.groupItems,
   filterItems: state => state.date.filterItems,
   eventParam: state => state.date.eventParam,
   chartType: state => state.date.chartType,
+  activeFunnelIndex: state => state.date.activeFunnelIndex,
+  funnelParam: state => state.date.funnelParam,
 };
 export default getters

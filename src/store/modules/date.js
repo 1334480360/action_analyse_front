@@ -13,6 +13,7 @@ const date = {
     autoRefreshChartList: [],
     autoRefreshCode: '',
     appName: null,
+    channel: null,
     eventItems: ['A'],
     groupItems: [0],
     filterItems: [],
@@ -35,7 +36,20 @@ const date = {
         ]
       },
       productName: "my-dafy"
-    }
+    },
+    activeFunnelIndex: 0,
+    funnelParam: {
+      beginDate: formatDate(day2, 'yyyy-MM-dd'),
+      endDate: formatDate(day1, 'yyyy-MM-dd'),
+      granularity: "day",
+      dimensionCode: 1,
+      id: 1,
+      filter: {
+        relation: "",
+        conditions: [
+        ]
+      }
+    },
   },
   mutations: {
     addToAutoRefreshChartList (state, chart) {
@@ -61,6 +75,10 @@ const date = {
     },
     clearAppName (state) {
       state.appName = null
+    },
+
+    updateChannel (state, code) {
+      state.channel = code
     },
 
     addEventItems (state) {
@@ -118,6 +136,21 @@ const date = {
 
     updateChartType (state, param) {
       state.chartType = param
+    },
+
+    updateActiveFunnelIndex (state, index) {
+      state.activeFunnelIndex = index
+    },
+
+    updateFunnelParam (state, param) {
+      state.funnelParam = null;
+      state.funnelParam = param
+    },
+    removeFunnelParamFilter (state) {
+      state.funnelParam.filter.conditions.splice(state.funnelParam.filter.conditions.length - 1);
+      if(state.funnelParam.filter.conditions.length <= 1){
+        state.funnelParam.filter.relation = ''
+      }
     },
 
 

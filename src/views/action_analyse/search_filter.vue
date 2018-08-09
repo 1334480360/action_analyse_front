@@ -46,7 +46,8 @@
     name: 'search_filter',
     computed: {
       ...mapGetters(['filterItems']),
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['funnelParam'])
     },
     props: {
       index: {
@@ -66,8 +67,12 @@
       filterRemove: function () {
         this.$store.commit('removeFilterItems');
 
+        //事件分析
         this.$store.commit('removeEventParamFilter');
         this.$store.commit('updateEventParam', this.eventParam);
+        //漏斗分析
+        this.$store.commit('removeFunnelParamFilter');
+        this.$store.commit('updateFunnelParam', this.funnelParam);
       },
       paramChange: function () {
         if (this.value === null || this.value === '') {
@@ -81,11 +86,19 @@
             this.value
           ]
         };
+        //事件分析
         this.eventParam.filter.conditions[this.index] = condition;
         if(this.eventParam.filter.conditions.length > 1 && (this.eventParam.filter.relation === '' || this.eventParam.filter.relation == null)){
           this.eventParam.filter.relation = 'and';
         }
         this.$store.commit('updateEventParam', this.eventParam);
+
+        //漏斗分析
+        this.funnelParam.filter.conditions[this.index] = condition;
+        if(this.funnelParam.filter.conditions.length > 1 && (this.funnelParam.filter.relation === '' || this.funnelParam.filter.relation == null)){
+          this.funnelParam.filter.relation = 'and';
+        }
+        this.$store.commit('updateFunnelParam', this.funnelParam);
       }
     },
     data() {
