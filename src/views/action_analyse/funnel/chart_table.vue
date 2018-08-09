@@ -34,7 +34,7 @@
         prop="dimensionName">
       </el-table-column>
       <el-table-column
-        :label="tableData[activeFunnelIndex-1].preEventName"
+        :label="tableData[0].preEventName"
         prop="preCount">
       </el-table-column>
       <el-table-column label="转化率">
@@ -45,7 +45,7 @@
       <el-table-column label="流失用户(人)" prop="flowCount">
       </el-table-column>
       <el-table-column
-        :label="tableData[activeFunnelIndex-1].nextEventName"
+        :label="tableData[0].nextEventName"
         prop="nextCount">
       </el-table-column>
 
