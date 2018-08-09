@@ -42,6 +42,8 @@
   import ChartSearch from './chart_search'
   import ChartTable from './chart_table'
 
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'test',
     components: {
@@ -49,7 +51,12 @@
       ChartSearch,
       ChartTable,
     },
+    computed: {
+      ...mapGetters(['funnelParam']),
+    },
     created() {
+      this.GLOBAL.beginDate = this.funnelParam.beginDate;
+      this.GLOBAL.endDate = this.funnelParam.endDate;
       this.appNameChange();
       this.channelChange();
     },
