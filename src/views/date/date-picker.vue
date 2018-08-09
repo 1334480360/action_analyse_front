@@ -31,7 +31,8 @@
 
   export default {
     computed: {
-      ...mapGetters(['eventParam'])
+      ...mapGetters(['eventParam']),
+      ...mapGetters(['funnelParam'])
     },
     methods: {
       datePickChange: function (val) {
@@ -41,7 +42,6 @@
 
         this.GLOBAL.beginDate = val[0];
         this.GLOBAL.endDate = val[1];
-        this.$store.commit('updateAutoRefreshCode', Math.random())
 
         //事件分析
         this.eventParam.beginDate = this.GLOBAL.beginDate;
@@ -52,6 +52,13 @@
           this.$message('按分钟查看，时间范围最多展示一天');
         }
         this.$store.commit('updateEventParam', this.eventParam);
+
+        //漏斗分析
+        this.funnelParam.beginDate = this.GLOBAL.beginDate;
+        this.funnelParam.endDate = this.GLOBAL.endDate;
+        this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random())
       }
     },
     data() {

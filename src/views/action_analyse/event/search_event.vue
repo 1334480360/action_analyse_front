@@ -63,6 +63,7 @@
         this.$store.commit('removeEventItems');
         this.$store.commit('removeEventParamEvent');
         this.$store.commit('updateEventParam', this.eventParam);
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       paramChange: function () {
         let event = {
@@ -72,6 +73,7 @@
         };
         this.eventParam.events[this.index] = event;
         this.$store.commit('updateEventParam', this.eventParam);
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       }
     },
     data() {

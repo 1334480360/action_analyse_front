@@ -58,6 +58,8 @@
         //漏斗分析
         this.funnelParam.filter.relation = this.relation;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       filterAdd: function () {
         this.$store.commit('addFilterItems');

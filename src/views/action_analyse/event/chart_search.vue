@@ -69,6 +69,7 @@
           this.$message('按分钟查看，时间范围最多展示一天');
         }
         this.$store.commit('updateEventParam', this.eventParam);
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       chartChange: function () {
         if(this.value1 === 'pie' && this.eventParam.dimensions[0] === 1){

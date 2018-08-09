@@ -53,11 +53,15 @@
     watch: {
       appName() {
         console.log('watch appName------');
-        this.getFunnelList();
+        this.$store.commit('updateAutoRefreshCode', Math.random());
+        // this.getFunnelList();
+        this.paramChange();
       },
       channel() {
         console.log('watch channel------');
-        this.getFunnelList();
+        this.$store.commit('updateAutoRefreshCode', Math.random());
+        // this.getFunnelList();
+        this.paramChange();
       },
     },
     data() {
@@ -70,6 +74,7 @@
       paramChange: function () {
         this.funnelParam.id = this.value;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       async getFunnelList() {
         this.loading = true;
@@ -77,7 +82,7 @@
           this.funnels = res.data.data;
           this.value = this.funnels[0].id;
 
-          this.paramChange();
+          // this.paramChange();
 
           this.loading = false;
 

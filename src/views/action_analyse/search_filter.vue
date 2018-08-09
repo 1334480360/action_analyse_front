@@ -99,6 +99,8 @@
           this.funnelParam.filter.relation = 'and';
         }
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       }
     },
     data() {

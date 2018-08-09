@@ -65,6 +65,8 @@
         //漏斗分析
         this.funnelParam.dimensionCode = this.value3;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       }
     },
     data() {

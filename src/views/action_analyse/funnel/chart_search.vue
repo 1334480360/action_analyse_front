@@ -86,16 +86,15 @@
     mounted() {
       this.queryFunnel();
     },
+    beforeDestroy() {
+      this.$store.commit('clearChartList');
+    },
     watch: {
       activeFunnelIndex() {
         console.log('watch activeFunnelIndex------');
         this.setCharts();
         this.setTableDataTotal();
         this.setTableData();
-      },
-      funnelParam() {
-        console.log('watch funnelParam------');
-        this.queryFunnel();
       },
     },
     data() {
@@ -111,7 +110,6 @@
     methods: {
       async queryFunnel() {
         this.loading = true;
-        // queryFunnel('2018-07-28', '2018-08-01', 51, 1).then(res => {
         queryFunnel(this.funnelParam).then(res => {
           this.funnelInfo = res.data.data;
 
@@ -135,6 +133,7 @@
       },
       setTableData: function () {
         this.tableData = this.funnelInfo.funnelStepVoList[this.activeFunnelIndex].funnelGroupVoList;
+        console.log(this.tableData);
       },
       setCharts: function () {
         let funnels = JSON.parse(JSON.stringify(this.funnelInfo))

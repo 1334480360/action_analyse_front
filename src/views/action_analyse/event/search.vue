@@ -59,6 +59,8 @@
 
         this.$store.commit('addEventParamEvent');
         this.$store.commit('updateEventParam', this.eventParam);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       }
     }
   }
