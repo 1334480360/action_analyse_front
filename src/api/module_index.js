@@ -35,3 +35,23 @@ export function eventResult (eventParam) {
     data: eventParam
   })
 }
+
+//获取漏斗列表
+export function funnelList (productName, channel) {
+  return request({
+    url: baseUrl + '/analysis/funnel/getFunnelList',
+    method: 'post',
+    data: {
+      productName: productName,
+      channel: channel
+    }
+  })
+}
+//获取漏斗分析数据
+export function queryFunnel (funnelParam) {
+  return request({
+    url: baseUrl + '/analysis/funnel/queryFunnel',
+    method: 'post',
+    data: funnelParam
+  })
+}
