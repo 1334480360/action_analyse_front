@@ -113,12 +113,6 @@
     beforeDestroy() {
       this.$store.commit('clearChartList');
     },
-    // watch: {
-    //   eventParam() {
-    //     console.log('watch eventParam------');
-    //     this.$store.commit('updateAutoRefreshCode', Math.random());
-    //   }
-    // },
     methods: {
       refresh: function () {
         this.$store.commit('updateAutoRefreshCode', Math.random());

@@ -136,7 +136,6 @@
       },
       setTableData: function () {
         this.tableData = this.funnelInfo.funnelStepVoList[this.activeFunnelIndex].funnelGroupVoList;
-        console.log(this.tableData);
       },
       setCharts: function () {
         let funnels = JSON.parse(JSON.stringify(this.funnelInfo))
