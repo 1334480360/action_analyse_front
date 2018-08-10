@@ -111,6 +111,9 @@
       async queryFunnel() {
         this.loading = true;
         queryFunnel(this.funnelParam).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
           this.funnelInfo = res.data.data;
 
           this.setCharts();

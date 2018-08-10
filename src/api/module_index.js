@@ -1,7 +1,15 @@
 import request from '@/utils/request'
 
-let baseUrl = 'http://10.10.11.137:8017/action-analyse';
-// let baseUrl = 'http://localhost:8017/action-analyse';
+// let baseUrl = 'http://10.10.11.137:8017/action-analyse';
+let baseUrl = 'http://localhost:8017/action-analyse';
+
+//结果统一处理
+export function resultHandle(res) {
+  if(res.data.result === 'fail') {
+    return res.data.message;
+  }
+  return null;
+}
 
 //根据模块获取所有指标
 export function indexList(code) {
@@ -9,7 +17,7 @@ export function indexList(code) {
     url: baseUrl + '/preview/data/getIndexList',
     method: 'post',
     data: {code: code}
-  })
+  });
 }
 
 //获取指标详细
@@ -24,7 +32,7 @@ export function indexDetail (id, code, beginDate, endDate, appName) {
       endDate: endDate,
       appName: appName
     }
-  })
+  });
 }
 
 //获取事件分析结果

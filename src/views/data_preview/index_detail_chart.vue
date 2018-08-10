@@ -122,6 +122,9 @@
     methods: {
       async getIndexDetail() {
         indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate, this.appName).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
           this.detail = res.data.data;
 
           //单位自适应

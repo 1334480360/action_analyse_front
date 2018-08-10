@@ -135,6 +135,9 @@
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       setCharts: function (data) {
+        if(data === null || data.length < 1){
+          return;
+        }
         this.charts = [];
         for (let i=0; i<data.length; i++) {
           let chart0 = data[i].charts;
@@ -229,11 +232,13 @@
           this.pieData.push(tr);
         }
 
-        console.log(JSON.parse(JSON.stringify(this.pieData)))
       },
       async getEventResult() {
         this.loading = true;
         eventResult(this.eventParam).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
           this.data = res.data.data;
 
           //重新组装charts

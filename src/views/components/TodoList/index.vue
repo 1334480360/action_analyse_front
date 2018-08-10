@@ -44,7 +44,7 @@ const defalutList = [
   { text: 'star this repository', done: false },
   { text: 'fork this repository', done: false },
   { text: 'follow author', done: false },
-  { text: 'vue-test', done: true },
+  { text: 'action-analyse', done: true },
   { text: 'vue', done: true },
   { text: 'element-ui', done: true },
   { text: 'axios', done: true },

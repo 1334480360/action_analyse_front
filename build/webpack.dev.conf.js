@@ -55,7 +55,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true,
       favicon: resolve('favicon.ico'),
-      title: 'vue-test',
+      title: 'action-analyse',
       path: config.dev.assetsPublicPath + config.dev.assetsSubDirectory
     }),
   ]

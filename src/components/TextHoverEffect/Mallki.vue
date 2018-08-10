@@ -14,7 +14,7 @@ export default {
     },
     text: {
       type: String,
-      default: 'vue-test'
+      default: 'action-analyse'
     }
   }
 }

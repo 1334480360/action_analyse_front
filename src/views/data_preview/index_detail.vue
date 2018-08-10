@@ -58,6 +58,7 @@
 
 <script>
   import {indexDetail} from "../../api/module_index";
+  import {resultHandle} from "../../api/module_index";
   import {formatCurrency} from '../../assets/common';
 
   export default {
@@ -85,6 +86,12 @@
     methods: {
       async getIndexDetail() {
         indexDetail(this.data.id, this.code, this.GLOBAL.beginDate, this.GLOBAL.endDate).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
+
+          resultHandle(res);
+
           this.detail = res.data.data;
           this.detail.value = formatCurrency(this.detail.value, this.detail.unit);
 

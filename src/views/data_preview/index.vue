@@ -41,6 +41,7 @@
   import RefreshHandler from '../../utils/refresh-handler'
 
   import {indexList} from "../../api/module_index";
+  import {resultHandle} from "../../api/module_index";
 
   const indexTitles = {
     app: {code: 'APP_BASE', title: 'App基础指标'},
@@ -108,6 +109,10 @@
       },
       async getIndexList() {
         indexList(this.code).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
+
           this.list = res.data.data;
         });
       }

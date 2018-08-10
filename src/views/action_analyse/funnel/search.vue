@@ -18,7 +18,7 @@
             <search-group :index="0"/>
           </div>
         </div>
-        <el-button type="success" class="btn btn-primary btn-create-fu pull-right">创建漏斗</el-button>
+        <el-button type="success" class="btn btn-primary btn-create-fu pull-right" @click="createFunnel">创建漏斗</el-button>
       </div>
 
       <!--筛选条件-->
@@ -79,16 +79,20 @@
       async getFunnelList() {
         this.loading = true;
         funnelList(this.appName, this.channel).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
           this.funnels = res.data.data;
           this.value = this.funnels[0].id;
-
-          // this.paramChange();
 
           this.loading = false;
 
           //添加方法到自动刷新列表
           this.$store.commit('addToAutoRefreshChartList', this.getFunnelList);
         });
+      },
+      createFunnel: function () {
+        this.$message('别急，该功能下期与你相见😊');
       }
     },
   }
