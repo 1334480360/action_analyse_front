@@ -32,7 +32,8 @@
   export default {
     computed: {
       ...mapGetters(['eventParam']),
-      ...mapGetters(['funnelParam'])
+      ...mapGetters(['funnelParam']),
+      ...mapGetters(['disParam']),
     },
     methods: {
       datePickChange: function (val) {
@@ -57,6 +58,11 @@
         this.funnelParam.beginDate = this.GLOBAL.beginDate;
         this.funnelParam.endDate = this.GLOBAL.endDate;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        //分布分析
+        this.disParam.beginDate = this.GLOBAL.beginDate;
+        this.disParam.endDate = this.GLOBAL.endDate;
+        this.$store.commit('updateDisParam', this.disParam);
 
         this.$store.commit('updateAutoRefreshCode', Math.random())
       }

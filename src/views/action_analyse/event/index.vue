@@ -112,6 +112,7 @@
     },
     beforeDestroy() {
       this.$store.commit('clearChartList');
+      this.$store.commit('initParam');
     },
     methods: {
       refresh: function () {

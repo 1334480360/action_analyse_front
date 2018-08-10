@@ -130,7 +130,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'distribution',
-      component: () => import('@/views/action_analyse/event/index'),
+      component: () => import('@/views/action_analyse/distribution/index'),
       name: 'distribution',
       meta: {
         title: 'distribution',

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-// let baseUrl = 'http://10.10.11.137:8017/action-analyse';
-let baseUrl = 'http://localhost:8017/action-analyse';
+let baseUrl = 'http://10.10.11.137:8017/action-analyse';
+// let baseUrl = 'http://localhost:8017/action-analyse';
 
 //结果统一处理
 export function resultHandle(res) {
@@ -61,5 +61,14 @@ export function queryFunnel (funnelParam) {
     url: baseUrl + '/analysis/funnel/queryFunnel',
     method: 'post',
     data: funnelParam
+  })
+}
+
+//获取分布分析数据
+export function queryDistribution (disParam) {
+  return request({
+    url: baseUrl + '/analysis/distribution/getPage',
+    method: 'post',
+    data: disParam
   })
 }

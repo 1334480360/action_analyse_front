@@ -4,19 +4,11 @@
       <div class="bookmark-tool-bar">
         <div class="analyse-top">
           <div class="bookmark-title-container">
-            <span class="bookmark-title" contenteditable="false">漏斗分析</span>
+            <span class="bookmark-title" contenteditable="false">分布分析</span>
           </div>
           <el-select v-model="value" filterable placeholder="请选择项目" style="width: 110px;" @change="appNameChange">
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="value1" filterable placeholder="请选择渠道" style="width: 110px;" @change="channelChange">
-            <el-option
-              v-for="item in options1"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -30,8 +22,10 @@
       <!--数据搜索条件-->
       <search/>
 
-      <!--图表搜索条件-->
       <chart-search/>
+
+      <!--图表搜索条件-->
+      <chart-table :table-data="tableData" v-loading="loading"/>
 
     </div>
   </div>
@@ -43,22 +37,25 @@
   import ChartTable from './chart_table'
 
   import {mapGetters} from 'vuex'
+  import {queryDistribution} from "../../../api/module_index";
 
   export default {
-    name: 'test',
+    name: 'index',
     components: {
       Search,
       ChartSearch,
       ChartTable,
     },
     computed: {
-      ...mapGetters(['funnelParam']),
+      ...mapGetters(['disParam']),
     },
     created() {
-      this.GLOBAL.beginDate = this.funnelParam.beginDate;
-      this.GLOBAL.endDate = this.funnelParam.endDate;
+      this.GLOBAL.beginDate = this.disParam.beginDate;
+      this.GLOBAL.endDate = this.disParam.endDate;
       this.appNameChange();
-      this.channelChange();
+    },
+    mounted() {
+      this.queryDistribution();
     },
     beforeDestroy() {
       this.$store.commit('clearChartList');
@@ -69,11 +66,26 @@
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
       appNameChange: function () {
+        this.disParam.appName = this.value;
+        this.$store.commit('updateDisParam', this.disParam);
         this.$store.commit('updateAppName', this.value);
+
+        this.$store.commit('updateAutoRefreshCode', Math.random());
       },
-      channelChange: function () {
-        this.$store.commit('updateChannel', this.value1);
-      },
+      async queryDistribution() {
+        this.loading = true;
+        queryDistribution(this.disParam).then(res => {
+          if(res.data.result === 'fail') {
+            this.$message.error(res.data.message);
+          }
+          this.tableData = res.data.data;
+
+          this.loading = false;
+
+          //添加方法到自动刷新列表
+          this.$store.commit('addToAutoRefreshChartList', this.queryDistribution);
+        });
+      }
     },
     data() {
       return {
@@ -84,12 +96,9 @@
           value: 'vip-loan',
           label: '豪有钱'
         }],
-        value: 'vip-loan',
-        options1: [{
-          value: 'wx',
-          label: '微信'
-        }],
-        value1: 'wx'
+        value: 'my-dafy',
+        tableData: [],
+        loading: true,
       }
     }
   }

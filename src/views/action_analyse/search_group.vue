@@ -43,6 +43,7 @@
       ...mapGetters(['groupItems']),
       ...mapGetters(['eventParam']),
       ...mapGetters(['funnelParam']),
+      ...mapGetters(['disParam']),
       ...mapGetters(['chartType']),
     },
     methods: {
@@ -65,6 +66,10 @@
         //漏斗分析
         this.funnelParam.dimensionCode = this.value3;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        //分布分析
+        this.disParam.dimension = this.value3;
+        this.$store.commit('updateDisParam', this.disParam);
 
         this.$store.commit('updateAutoRefreshCode', Math.random());
       }

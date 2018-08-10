@@ -47,7 +47,8 @@
     computed: {
       ...mapGetters(['filterItems']),
       ...mapGetters(['eventParam']),
-      ...mapGetters(['funnelParam'])
+      ...mapGetters(['funnelParam']),
+      ...mapGetters(['disParam']),
     },
     props: {
       index: {
@@ -73,6 +74,9 @@
         //漏斗分析
         this.$store.commit('removeFunnelParamFilter');
         this.$store.commit('updateFunnelParam', this.funnelParam);
+        //分布分析
+        this.$store.commit('removeDisParamFilter');
+        this.$store.commit('updateDisParam', this.disParam);
 
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
@@ -101,6 +105,13 @@
           this.funnelParam.filter.relation = 'and';
         }
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        //分布分析
+        this.disParam.filter.conditions[this.index] = condition;
+        if(this.disParam.filter.conditions.length > 1 && (this.disParam.filter.relation === '' || this.disParam.filter.relation == null)){
+          this.disParam.filter.relation = 'and';
+        }
+        this.$store.commit('updateDisParam', this.disParam);
 
         this.$store.commit('updateAutoRefreshCode', Math.random());
       }

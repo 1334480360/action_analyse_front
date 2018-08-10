@@ -4,7 +4,58 @@ import {formatDate} from "../../assets/common";
 let day1 = new Date();
 day1.setDate(day1.getDate() - 1);
 let day2 = new Date();
-day2.setDate(day1.getDate() - 7);
+day2.setDate(day1.getDate() - 1);
+let day3 = new Date();
+day3.setDate(day1.getDate() - 6);
+
+
+const eventParam = {
+  beginDate: formatDate(day3, 'yyyy-MM-dd'),
+  endDate: formatDate(day1, 'yyyy-MM-dd'),
+  granularity: "day",
+  dimensions: [1],
+  events: [
+    {
+      pageName: "",
+      eventName: "",
+      metric: "total_count"
+    }
+  ],
+  filter: {
+    relation: "",
+    conditions: []
+  },
+  productName: "my-dafy"
+};
+
+const funnelParam = {
+  beginDate: formatDate(day2, 'yyyy-MM-dd'),
+  endDate: formatDate(day1, 'yyyy-MM-dd'),
+  granularity: "day",
+  dimensionCode: 1,
+  id: 1,
+  filter: {
+    relation: "",
+    conditions: []
+  }
+};
+
+const disParam = {
+  beginDate: formatDate(day3, 'yyyy-MM-dd'),
+  endDate: formatDate(day1, 'yyyy-MM-dd'),
+  granularity: "day",
+  dimension: null,
+  appName: "my-dafy",
+  pageName: "",
+  eventName: "",
+  metric: "total_count",
+  filter: {
+    relation: "",
+    conditions: []
+  },
+};
+
+
 
 const date = {
   state: {
@@ -18,38 +69,10 @@ const date = {
     groupItems: [0],
     filterItems: [],
     chartType: 'line',
-    eventParam: {
-      beginDate: formatDate(day2, 'yyyy-MM-dd'),
-      endDate: formatDate(day1, 'yyyy-MM-dd'),
-      granularity: "day",
-      dimensions: [1],
-      events: [
-        {
-          pageName: "",
-          eventName: "",
-          metric: "total_count"
-        }
-      ],
-      filter: {
-        relation: "",
-        conditions: [
-        ]
-      },
-      productName: "my-dafy"
-    },
+    eventParam: eventParam,
     activeFunnelIndex: 0,
-    funnelParam: {
-      beginDate: formatDate(day2, 'yyyy-MM-dd'),
-      endDate: formatDate(day1, 'yyyy-MM-dd'),
-      granularity: "day",
-      dimensionCode: 1,
-      id: 1,
-      filter: {
-        relation: "",
-        conditions: [
-        ]
-      }
-    },
+    funnelParam: funnelParam,
+    disParam: disParam,
   },
   mutations: {
     addToAutoRefreshChartList (state, chart) {
@@ -152,6 +175,67 @@ const date = {
         state.funnelParam.filter.relation = ''
       }
     },
+
+    updateDisParam (state, param) {
+      state.disParam = null;
+      state.disParam = param
+    },
+    removeDisParamFilter (state) {
+      state.disParam.filter.conditions.splice(state.disParam.filter.conditions.length - 1);
+      if(state.disParam.filter.conditions.length <= 1){
+        state.disParam.filter.relation = ''
+      }
+    },
+
+    initParam(state){
+      state.eventParam = null;
+      state.funnelParam = null;
+      state.disParam = null;
+
+      state.eventParam = {
+        beginDate: formatDate(day3, 'yyyy-MM-dd'),
+        endDate: formatDate(day1, 'yyyy-MM-dd'),
+        granularity: "day",
+        dimensions: [1],
+        events: [
+          {
+            pageName: "",
+            eventName: "",
+            metric: "total_count"
+          }
+        ],
+        filter: {
+          relation: "",
+          conditions: []
+        },
+        productName: "my-dafy"
+      };;
+      state.funnelParam = {
+        beginDate: formatDate(day2, 'yyyy-MM-dd'),
+        endDate: formatDate(day1, 'yyyy-MM-dd'),
+        granularity: "day",
+        dimensionCode: 1,
+        id: 1,
+        filter: {
+          relation: "",
+          conditions: []
+        }
+      };;
+      state.disParam = {
+        beginDate: formatDate(day3, 'yyyy-MM-dd'),
+        endDate: formatDate(day1, 'yyyy-MM-dd'),
+        granularity: "day",
+        dimension: null,
+        appName: "my-dafy",
+        pageName: "",
+        eventName: "",
+        metric: "total_count",
+        filter: {
+          relation: "",
+          conditions: []
+        },
+      };
+    }
 
 
   }

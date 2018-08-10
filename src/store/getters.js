@@ -25,5 +25,6 @@ const getters = {
   chartType: state => state.date.chartType,
   activeFunnelIndex: state => state.date.activeFunnelIndex,
   funnelParam: state => state.date.funnelParam,
+  disParam: state => state.date.disParam,
 };
 export default getters

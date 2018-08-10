@@ -52,6 +52,7 @@
     beforeDestroy() {
       this.$store.commit('initEventItems');
       this.$store.commit('initGroupItems');
+      this.$store.commit('initParam');
     },
     methods: {
       eventAdd: function () {

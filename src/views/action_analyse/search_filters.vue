@@ -42,7 +42,8 @@
     computed: {
       ...mapGetters(['filterItems']),
       ...mapGetters(['eventParam']),
-      ...mapGetters(['funnelParam'])
+      ...mapGetters(['funnelParam']),
+      ...mapGetters(['disParam']),
     },
     methods: {
       relationSwitch: function () {
@@ -58,6 +59,10 @@
         //漏斗分析
         this.funnelParam.filter.relation = this.relation;
         this.$store.commit('updateFunnelParam', this.funnelParam);
+
+        //分布分析
+        this.disParam.filter.relation = this.relation;
+        this.$store.commit('updateDisParam', this.disParam);
 
         this.$store.commit('updateAutoRefreshCode', Math.random());
       },
