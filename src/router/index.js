@@ -122,7 +122,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'retain',
-      component: () => import('@/views/action_analyse/event/index'),
+      component: () => import('@/views/action_analyse/retain/index'),
       name: 'retain',
       meta: {
         title: 'retain',

@@ -21,6 +21,7 @@
 
     <!--筛选条件按钮-->
     <div class="ops-item">
+      <span>{{title}}</span>
       <button type="button" class="btn btn-link" @click="filterAdd" style="text-decoration: none;">
         <span class="icon-add"></span><span>筛选条件</span>
       </button>
@@ -44,6 +45,11 @@
       ...mapGetters(['eventParam']),
       ...mapGetters(['funnelParam']),
       ...mapGetters(['disParam']),
+    },
+    props: {
+      title: {
+        type: String
+      }
     },
     methods: {
       relationSwitch: function () {

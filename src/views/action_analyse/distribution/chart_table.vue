@@ -80,51 +80,6 @@
         }
       }
     },
-    // data() {
-    //   return {
-    //     tableData:  [
-    //       {
-    //         "dates": "Android",
-    //         "dateStr": "Android",
-    //         "totalNum": 118,
-    //         "num1": 108,
-    //         "num2": 10,
-    //         "num3": 0,
-    //         "num4": 0,
-    //         "num5": 0,
-    //         "num6": 0,
-    //         "num7": 0,
-    //         "num8": 0
-    //       },
-    //       {
-    //         "dates": "Windows",
-    //         "dateStr": "Windows",
-    //         "totalNum": 1,
-    //         "num1": 1,
-    //         "num2": 0,
-    //         "num3": 0,
-    //         "num4": 0,
-    //         "num5": 0,
-    //         "num6": 0,
-    //         "num7": 0,
-    //         "num8": 0
-    //       },
-    //       {
-    //         "dates": "iOS",
-    //         "dateStr": "iOS",
-    //         "totalNum": 29,
-    //         "num1": 27,
-    //         "num2": 2,
-    //         "num3": 0,
-    //         "num4": 0,
-    //         "num5": 0,
-    //         "num6": 0,
-    //         "num7": 0,
-    //         "num8": 0
-    //       }
-    //     ]
-    //   }
-    // }
   }
 </script>
 
