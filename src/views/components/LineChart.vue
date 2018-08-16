@@ -4,11 +4,11 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-
-require('echarts/theme/macarons'); // echarts theme
+import echarts from 'echarts' // echarts theme
 import { debounce } from '@/utils'
-import {formatStrToDate} from "../../assets/common";
+import {formatStrToDate} from '../../assets/common'
+
+require('echarts/theme/macarons')
 
 export default {
   props: {
@@ -28,6 +28,10 @@ export default {
       type: Boolean,
       default: true
     },
+    tipType: {
+      type: String,
+      default: 'axis'
+    },
     chartData: {
       type: Array,
       default () {
@@ -35,27 +39,27 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       chart: null
     }
   },
-  mounted() {
-    this.initChart();
+  mounted () {
+    this.initChart()
     if (this.autoResize) {
       this.__resizeHanlder = debounce(() => {
         if (this.chart) {
           this.chart.resize()
         }
-      }, 100);
+      }, 100)
       window.addEventListener('resize', this.__resizeHanlder)
     }
 
     // 监听侧边栏的变化
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0];
+    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (!this.chart) {
       return
     }
@@ -66,71 +70,70 @@ export default {
     const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
 
-    this.chart.dispose();
+    this.chart.dispose()
     this.chart = null
   },
   watch: {
     chartData: {
       deep: true,
-      handler(val) {
-        this.setOptions(val);
+      handler (val) {
+        this.setOptions(val)
       }
     }
   },
   methods: {
     sort: function (a, b) {
       if (isNaN(a)) {
-        return formatStrToDate(a) - formatStrToDate(b);
+        return formatStrToDate(a) - formatStrToDate(b)
       }
-      return a - b;
+      return a - b
     },
 
-    setOptions: function(charts) {
-      this.chart.clear();
+    setOptions: function (charts) {
+      this.chart.clear()
       this.chart.showLoading({
         text: '查询中...',
-        textStyle: { fontSize : 30 , color: '#61C283' },
+        textStyle: { fontSize: 30, color: '#61C283' },
         effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
-      });
+      })
       if (charts === null || charts.length === undefined || charts.length === 0) {
-        this.chart.hideLoading();
-        return;
+        this.chart.hideLoading()
+        return
       }
 
-      //横坐标值
-      let xAxisSet = new Set();
-      //维度列表
-      let seriesMap = new Map();
+      // 横坐标值
+      let xAxisSet = new Set()
+      // 维度列表
+      let seriesMap = new Map()
       charts.map(val1 => {
         val1.datas.map(val2 => {
-          if(val2.date !== '合计'){
-            xAxisSet.add(val2.date);
+          if (val2.date !== '合计') {
+            xAxisSet.add(val2.date)
           }
-        });
-      });
-      let xAxisArr = Array.from(xAxisSet).sort(this.sort);
-      let length = xAxisArr.length;
+        })
+      })
+      let xAxisArr = Array.from(xAxisSet).sort(this.sort)
+      let length = xAxisArr.length
 
-      //数据和坐标对应
+      // 数据和坐标对应
       charts.map(val1 => {
-        let seriesList = [];
+        let seriesList = []
         for (let i = 0; i < length; i++) {
-          seriesList[i] = 0;
+          seriesList[i] = 0
         }
 
         val1.datas.map(val2 => {
-          if(val2.date !== '合计'){
+          if (val2.date !== '合计') {
             for (let i = 0; i < length; i++) {
               if (xAxisArr[i] === val2.date) {
-                seriesList.splice(i, 0, val2.value);
-                break;
+                seriesList.splice(i, 0, val2.value)
+                break
               }
             }
           }
-        });
-        seriesMap.set(val1.dimension, seriesList.slice(0, length));
-      });
-
+        })
+        seriesMap.set(val1.dimension, seriesList.slice(0, length))
+      })
       this.chart.setOption({
         xAxis: {
           data: xAxisArr,
@@ -147,7 +150,7 @@ export default {
           containLabel: true
         },
         tooltip: {
-          trigger: 'axis',
+          trigger: this.tipType,
           axisPointer: {
             type: 'cross'
           },
@@ -162,7 +165,7 @@ export default {
           type: 'scroll',
           bottom: 'bottom',
           data: charts.map(val => {
-            return val.dimension;
+            return val.dimension
           })
         },
         series: charts.map(val => {
@@ -173,12 +176,12 @@ export default {
             animationDuration: 2800,
             data: seriesMap.get(val.dimension)
           }
-        }),
-      });
-      this.chart.hideLoading();
+        })
+      })
+      this.chart.hideLoading()
     },
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons');
+    initChart () {
+      this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     }
   }

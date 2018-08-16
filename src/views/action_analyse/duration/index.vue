@@ -4,8 +4,9 @@
       <div class="bookmark-tool-bar">
         <div class="analyse-top">
           <div class="bookmark-title-container">
-            <span class="bookmark-title" contenteditable="false">事件分析</span>
+            <span class="bookmark-title" contenteditable="false">间隔分析</span>
           </div>
+          <!-- 选择项目 -->
           <el-select v-model="value" filterable placeholder="请选择项目" style="width: 110px;" @change="paramChange">
             <el-option
               v-for="item in options"
@@ -14,22 +15,23 @@
               :value="item.value">
             </el-option>
           </el-select>
+          <!-- 刷新按钮 -->
           <el-button @click="refresh" icon="el-icon-refresh" style="width: 55px; position: absolute; right: 20px; top: 5px;"></el-button>
         </div>
       </div>
     </div>
+
     <div class="sa-report">
       <!--数据搜索条件-->
       <search/>
-
       <!--图表搜索条件-->
       <chart-search/>
-      <!--图表模块-->
+      <!--图表显示区域-->
       <section class="report-chart"
                style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent;">
-          <line-chart :chart-data="charts" :total-show="false" v-loading="loading" v-if="this.chartType === 'line'"></line-chart>
+          <!-- <line-chart :chart-data="charts" :total-show="false" v-loading="loading" v-if="this.chartType === 'line'"></line-chart>
           <bar-chart :chart-data="charts" :total-show="false" v-loading="loading" v-else-if="this.chartType === 'bar'"></bar-chart>
-          <pie-chart :chart-data="pieData" :total-show="false" v-loading="loading" v-else-if="this.chartType === 'pie'"></pie-chart>
+          <pie-chart :chart-data="pieData" :total-show="false" v-loading="loading" v-else-if="this.chartType === 'pie'"></pie-chart> -->
       </section>
 
       <!--间隔面板-->
@@ -66,7 +68,7 @@
         <!--</div>-->
       <!--</div>-->
       <!--表格-->
-      <chart-table :table-data="tableData" :date-arr="dateArr" :is-total="eventParam.dimensions[0] === 0" v-loading="loading"/>
+      <!-- <chart-table :table-data="tableData" :date-arr="dateArr"  v-loading="loading"/> -->
 
       <div class="modal fade" id="config-axis-container" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true"></div>
     </div>
@@ -74,17 +76,17 @@
 </template>
 
 <script>
-import LineChart from '../../components/LineChart'
-import LineAreaChart from '../../components/LineAreaChart'
-import PieChart from '../../components/PieChart'
-import BarChart from '../../components/BarChart'
+// import LineChart from '../../components/LineChart'
+// import LineAreaChart from '../../components/LineAreaChart'
+// import PieChart from '../../components/PieChart'
+// import BarChart from '../../components/BarChart'
 
 import Search from './search'
 import ChartSearch from './chart_search'
 import ChartTable from './chart_table'
 import RefreshHandler from '../../../utils/refresh-handler'
 
-import {eventResult} from '../../../api/module_index'
+import {queryDuration} from '../../../api/module_index'
 import {formatStrToDate} from '../../../assets/common'
 import {mapGetters} from 'vuex'
 
@@ -93,22 +95,22 @@ export default {
   components: {
     Search,
     ChartSearch,
-    ChartTable,
-    LineChart,
-    LineAreaChart,
-    PieChart,
-    BarChart
+    ChartTable
+    // LineChart,
+    // LineAreaChart,
+    // PieChart,
+    // BarChart
   },
   computed: {
-    ...mapGetters(['eventParam']),
+    ...mapGetters(['durationParam']),
     ...mapGetters(['chartType'])
   },
   created () {
-    this.GLOBAL.beginDate = this.eventParam.beginDate
-    this.GLOBAL.endDate = this.eventParam.endDate
+    this.GLOBAL.beginDate = this.durationParam.beginDate
+    this.GLOBAL.endDate = this.durationParam.endDate
   },
   mounted () {
-    this.getEventResult()
+    this.getDurationResult()
   },
   beforeDestroy () {
     this.$store.commit('clearChartList')
@@ -125,128 +127,129 @@ export default {
       return a.group >= b.group ? 1 : -1
     },
     paramChange: function () {
-      this.eventParam.productName = this.value
-      this.$store.commit('updateEventParam', this.eventParam)
+      this.durationParam.productName = this.value
+      this.$store.commit('updateDurationParam', this.durationParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
-    setCharts: function (data) {
-      if (data === null || data.length < 1) {
-        return
-      }
-      this.charts = []
-      for (let i = 0; i < data.length; i++) {
-        let chart0 = data[i].charts
-        for (let j = 0; j < chart0.length; j++) {
-          let chart00 = chart0[j]
-          if (this.eventParam.dimensions[0] > 1) {
-            // 分组名称
-            chart00.dimension = chart00.datas[1].name + '-' + chart00.dimension
-            chart00.datas.splice(0, 1)
-          }
-          this.charts.push(chart00)
-        }
-      }
-      console.log(this.charts)
-    },
-    setTableData: function (data) {
-      this.dateArr = []
-      this.tableData = []
-      let dateSet = new Set()
-      let dataArr = []
+    // setCharts: function (data) {
+    //   if(data === null || data.length < 1){
+    //     return;
+    //   }
+    //   this.charts = [];
+    //   for (let i=0; i<data.length; i++) {
+    //     let chart0 = data[i].charts;
+    //     for (let j=0; j<chart0.length; j++) {
+    //       let chart00 = chart0[j];
+    //       if(this.eventParam.dimensions[0] > 1){
+    //         //分组名称
+    //         chart00.dimension = chart00.datas[1].name + '-' + chart00.dimension;
+    //         chart00.datas.splice(0, 1);
+    //       }
+    //       this.charts.push(chart00);
+    //     }
+    //   }
+    //   console.log(this.charts);
+    // },
+    // setTableData: function (data) {
+    //   this.dateArr = [];
+    //   this.tableData = [];
+    //   let dateSet = new Set();
+    //   let dataArr = [];
 
-      for (let i = 0; i < data.length; i++) {
-        let chart0 = data[i].charts
-        for (let j = 0; j < chart0.length; j++) {
-          let chart00 = chart0[j]
-          let datas = chart0[j].datas
-          for (let k = 0; k < datas.length; k++) {
-            let date = datas[k]
-            date.dimension = chart00.dimension
-            if (date.date !== '合计') {
-              dateSet.add(date.date)
-            }
-          }
-          dataArr.push(datas)
-        }
-      }
+    //   for (let i=0; i<data.length; i++) {
+    //     let chart0 = data[i].charts;
+    //     for (let j=0; j<chart0.length; j++) {
+    //       let chart00 = chart0[j];
+    //       let datas = chart0[j].datas;
+    //       for (let k=0; k<datas.length; k++) {
+    //         let date = datas[k];
+    //         date.dimension = chart00.dimension;
+    //         if(date.date !== '合计'){
+    //           dateSet.add(date.date);
+    //         }
+    //       }
+    //       dataArr.push(datas);
+    //     }
+    //   }
 
-      this.dateArr = Array.from(dateSet).sort(this.sort)
+    //   this.dateArr = Array.from(dateSet).sort(this.sort);
 
-      for (let i = 0; i < dataArr.length; i++) {
-        let data0 = dataArr[i]
-        let tr = {}
-        tr.group = data0[1].name
-        tr.dimension = data0[1].dimension
-        tr.ammount = data0[0].value
-        let dates = []
-        for (let j = 0; j < this.dateArr.length; j++) {
-          dates[j] = 0
-        }
+    //   for (let i=0; i<dataArr.length; i++) {
+    //     let data0 = dataArr[i];
+    //     let tr = {};
+    //     tr.group = data0[1].name;
+    //     tr.dimension = data0[1].dimension;
+    //     tr.ammount = data0[0].value;
+    //     let dates =[];
+    //     for (let j=0; j<this.dateArr.length; j++) {
+    //       dates[j] = 0;
+    //     }
 
-        for (let k = 0; k < data0.length; k++) {
-          for (let m = 0; m < this.dateArr.length; m++) {
-            if (data0[k].date === this.dateArr[m]) {
-              dates[m] = data0[k].value
-              break
-            }
-          }
-        }
+    //     for (let k=0; k<data0.length; k++) {
+    //       for (let m=0; m<this.dateArr.length; m++) {
+    //         if (data0[k].date === this.dateArr[m]) {
+    //           dates[m] = data0[k].value;
+    //           break;
+    //         }
+    //       }
+    //     }
 
-        tr.dates = dates
-        this.tableData.push(tr)
-      }
+    //     tr.dates = dates;
+    //     this.tableData.push(tr);
+    //   }
 
-      this.tableData.sort(this.sortByLetter)
-      console.log(this.dateArr, this.tableData)
-    },
-    setPieData: function (data) {
-      this.pieData = []
-      let dateSet = new Set()
-      let dataArr = []
+    //   this.tableData.sort(this.sortByLetter);
+    //   console.log(this.dateArr,this.tableData)
+    // },
+    // setPieData: function (data) {
+    //   this.pieData = [];
+    //   let dateSet = new Set();
+    //   let dataArr = [];
 
-      for (let i = 0; i < data.length; i++) {
-        let chart0 = data[i].charts
-        for (let j = 0; j < chart0.length; j++) {
-          let chart00 = chart0[j]
-          let datas = chart0[j].datas
-          for (let k = 0; k < datas.length; k++) {
-            let date = datas[k]
-            date.dimension = chart00.dimension
-            if (date.date !== '合计') {
-              dateSet.add(date.date)
-            }
-          }
-          dataArr.push(datas)
-        }
-      }
+    //   for (let i=0; i<data.length; i++) {
+    //     let chart0 = data[i].charts;
+    //     for (let j=0; j<chart0.length; j++) {
+    //       let chart00 = chart0[j];
+    //       let datas = chart0[j].datas;
+    //       for (let k=0; k<datas.length; k++) {
+    //         let date = datas[k];
+    //         date.dimension = chart00.dimension;
+    //         if(date.date !== '合计'){
+    //           dateSet.add(date.date);
+    //         }
+    //       }
+    //       dataArr.push(datas);
+    //     }
+    //   }
 
-      for (let i = 0; i < dataArr.length; i++) {
-        let data0 = dataArr[i]
-        let tr = {}
-        tr.name = data0[1].name
-        tr.seriesName = data0[1].dimension
-        tr.value = data0[0].value
-        this.pieData.push(tr)
-      }
-    },
-    async getEventResult () {
+    //   for (let i=0; i<dataArr.length; i++) {
+    //     let data0 = dataArr[i];
+    //     let tr = {};
+    //     tr.name = data0[1].name;
+    //     tr.seriesName = data0[1].dimension;
+    //     tr.value = data0[0].value;
+    //     this.pieData.push(tr);
+    //   }
+
+    // },
+    async getDurationResult () {
       this.loading = true
-      console.log(this.eventParam)
-      eventResult(this.eventParam).then(res => {
+      console.log(this.durationParam)
+      queryDuration(this.durationParam).then(res => {
         if (res.data.result === 'fail') {
           this.$message.error(res.data.message)
         }
         this.data = res.data.data
-
+        console.log('duration', res)
         // 重新组装charts
-        this.setCharts(JSON.parse(JSON.stringify(this.data)))
-        this.setTableData(JSON.parse(JSON.stringify(this.data)))
-        this.setPieData(JSON.parse(JSON.stringify(this.data)))
+        // this.setCharts(JSON.parse(JSON.stringify(this.data)));
+        // this.setTableData(JSON.parse(JSON.stringify(this.data)));
+        // this.setPieData(JSON.parse(JSON.stringify(this.data)));
 
         this.loading = false
 
         // 添加方法到自动刷新列表
-        this.$store.commit('addToAutoRefreshChartList', this.getEventResult)
+        this.$store.commit('addToAutoRefreshChartList', this.getDurationResult)
       })
     }
   },

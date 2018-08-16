@@ -4,17 +4,13 @@
     <!--添加指标-->
     <div class="ops-item" style="border-bottom: none; background-color: #FDFDFE;">
       <span data-method="toggle-measures" style="vertical-align: sub; cursor: pointer;" class="icon-chart-collapse" aria-hidden="true"></span>
-      <span style="color: #4B5764; font-weight: 400;">请添加指标</span>
+      <span style="color: #4B5764; font-weight: 400;">选择事件</span>
     </div>
     <!--请添加指标-->
     <section class="report-ops" id="report-ops">
       <div class="ops-item measures-container">
-        <!--事件-->
-        <search-event v-for="(item, index) in eventItems" :index="index" :key="index"></search-event>
-        <!--＋号-->
-        <button @click="eventAdd" type="button" class="event-measure-add-new" data-placement="right">
-          <span class="icon-new"></span>
-        </button>
+        <!--按事件-->
+        <search-event v-for="(item, index) in ['A', 'B']" :index="index" :key="index"></search-event>
       </div>
 
       <!--按分组查看-->
@@ -24,7 +20,8 @@
       </div>
 
       <!--筛选条件-->
-      <search-filters/>
+      <search-filters title="事件符合"/>
+      <search-filters title="用户符合"/>
 
     </section>
   </div>

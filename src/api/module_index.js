@@ -1,26 +1,26 @@
 import request from '@/utils/request'
 
-let baseUrl = 'http://10.10.11.137:8017/action-analyse';
+let baseUrl = 'http://10.10.11.137:8017/action-analyse'
 // let baseUrl = 'http://localhost:8017/action-analyse';
 
-//结果统一处理
-export function resultHandle(res) {
-  if(res.data.result === 'fail') {
-    return res.data.message;
+// 结果统一处理
+export function resultHandle (res) {
+  if (res.data.result === 'fail') {
+    return res.data.message
   }
-  return null;
+  return null
 }
 
-//根据模块获取所有指标
-export function indexList(code) {
+// 根据模块获取所有指标
+export function indexList (code) {
   return request({
     url: baseUrl + '/preview/data/getIndexList',
     method: 'post',
     data: {code: code}
-  });
+  })
 }
 
-//获取指标详细
+// 获取指标详细
 export function indexDetail (id, code, beginDate, endDate, appName) {
   return request({
     url: baseUrl + '/preview/data/getIndexVo',
@@ -32,10 +32,10 @@ export function indexDetail (id, code, beginDate, endDate, appName) {
       endDate: endDate,
       appName: appName
     }
-  });
+  })
 }
 
-//获取事件分析结果
+// 获取事件分析结果
 export function eventResult (eventParam) {
   return request({
     url: baseUrl + '/analysis/event/getResult',
@@ -44,7 +44,7 @@ export function eventResult (eventParam) {
   })
 }
 
-//获取漏斗列表
+// 获取漏斗列表
 export function funnelList (productName, channel) {
   return request({
     url: baseUrl + '/analysis/funnel/getFunnelList',
@@ -55,7 +55,7 @@ export function funnelList (productName, channel) {
     }
   })
 }
-//获取漏斗分析数据
+// 获取漏斗分析数据
 export function queryFunnel (funnelParam) {
   return request({
     url: baseUrl + '/analysis/funnel/queryFunnel',
@@ -64,11 +64,29 @@ export function queryFunnel (funnelParam) {
   })
 }
 
-//获取分布分析数据
+// 获取分布分析数据
 export function queryDistribution (disParam) {
   return request({
     url: baseUrl + '/analysis/distribution/getPage',
     method: 'post',
     data: disParam
+  })
+}
+
+// 获取留存分析结果
+export function queryRetain (param) {
+  return request({
+    url: baseUrl + '/analysis/retain/getResult',
+    method: 'post',
+    data: param
+  })
+}
+
+// 获取间隔分析结果
+export function queryDuration (param) {
+  return request({
+    url: baseUrl + '/analysis/duration/getResult',
+    method: 'post',
+    data: param
   })
 }

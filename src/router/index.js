@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/views/layout/Layout'
+
+Vue.use(Router)
 
 /** note: submenu only apppear when children.length>=1
 *   detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -24,7 +24,7 @@ import Layout from '@/views/layout/Layout'
     noCache: true                if true ,the page will no be cached(default is false)
   }
  **/
-//不需要动态判断权限的路由，如登录页、404、等通用页面
+// 不需要动态判断权限的路由，如登录页、404、等通用页面
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
   {path: '/authredirect', component: () => import('@/views/login/authredirect'), hidden: true},
@@ -39,10 +39,10 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index'),
       name: 'dashboard',
       meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
-    }],
+    }]
     // hidden: true
   }
-];
+]
 
 export default new Router({
   // mode: 'history', // require service support
@@ -50,7 +50,7 @@ export default new Router({
   routes: constantRouterMap
 })
 
-//需求动态判断权限并通过 addRouters 动态添加的页面
+// 需求动态判断权限并通过 addRouters 动态添加的页面
 export const asyncRouterMap = [
   {
     path: '/data_preview',
@@ -59,7 +59,7 @@ export const asyncRouterMap = [
     alwaysShow: true, // will always show the root menu
     meta: {
       title: 'data_preview',
-      icon: 'dashboard',
+      icon: 'dashboard'
     },
     children: [{
       path: 'app',
@@ -67,7 +67,7 @@ export const asyncRouterMap = [
       name: 'app_base',
       meta: {
         title: 'app_base',
-        icon: 'chart',
+        icon: 'chart'
       }
     }, {
       path: 'website',
@@ -102,7 +102,7 @@ export const asyncRouterMap = [
     alwaysShow: true, // will always show the root menu
     meta: {
       title: 'action_analyse',
-      icon: 'user',
+      icon: 'user'
     },
     children: [{
       path: 'event',
@@ -110,7 +110,7 @@ export const asyncRouterMap = [
       name: 'event',
       meta: {
         title: 'event',
-        icon: 'component',
+        icon: 'component'
       }
     }, {
       path: 'funnel',
@@ -136,7 +136,7 @@ export const asyncRouterMap = [
         title: 'distribution',
         icon: 'component'
       }
-    },  {
+    }, {
       path: 'user_path',
       component: () => import('@/views/action_analyse/event/index'),
       name: 'user_path',
@@ -144,9 +144,9 @@ export const asyncRouterMap = [
         title: 'user_path',
         icon: 'component'
       }
-    },  {
+    }, {
       path: 'duration',
-      component: () => import('@/views/action_analyse/event/index'),
+      component: () => import('@/views/action_analyse/duration/index'),
       name: 'duration',
       meta: {
         title: 'duration',

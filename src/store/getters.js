@@ -26,5 +26,7 @@ const getters = {
   activeFunnelIndex: state => state.date.activeFunnelIndex,
   funnelParam: state => state.date.funnelParam,
   disParam: state => state.date.disParam,
-};
+  retainParam: state => state.date.retainParam,
+  durationParam: state => state.date.durationParam
+}
 export default getters

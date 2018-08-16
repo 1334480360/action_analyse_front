@@ -7,58 +7,73 @@
       stripe
       border
     >
-      <el-table-column label="分组" fixed prop="dates" width="100px"></el-table-column>
-      <el-table-column label="总人数" prop="totalNum"></el-table-column>
-      <el-table-column label="第0天">
-        <el-tooltip class="item" effect="dark" :content="tip" placement="top">
-          <span class="icon-help"></span>
-        </el-tooltip>
-      </el-table-column>
-      <el-table-column label="第1天"></el-table-column>
-      <el-table-column label="第2天"></el-table-column>
+      <el-table-column label="日期" fixed prop="date" width="100px"></el-table-column>
+      <el-table-column
+            :label="`第 ${diff} ${dateType}`"
+            v-for="(diff, index) in dateArr"
+            :key="index"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.userCount[index] || scope.row.userCount[index] == '0'">
+                <span>{{scope.row.userCount[index] + ' 人'}}</span>
+                <br>
+                <span>{{scope.row.rate[index]}}</span>
+              </span>
+            </template>
+          </el-table-column>
     </el-table>
   </section>
 </template>
 
 <script>
-  export default {
-    name: 'chart-table',
-    // props: {
-    //   tableData: {
-    //     type: Array,
-    //     default () {
-    //       return []
-    //     }
-    //   }
-    // },
-    data() {
-      return {
-        tip: '初始事件触发的当天即为第 0 天，第 0 天留存用户数表示当天既进行了任意事件也进行了任意事件的用户。（不分前后顺序）',
-        tableData: [
-          {
-            "beginDate": "2018-08-05",
-            "userCount": 62515,
-            "details": [
-              {
-                "beginDate": "2018-08-05",
-                "retainDate": "2018-08-05",
-                "userCount": 62515,
-                "diff": 0,
-                "percent": 100
-              },
-              {
-                "beginDate": "2018-08-05",
-                "retainDate": "2018-08-06",
-                "userCount": 9045,
-                "diff": 1,
-                "percent": 14.47
-              }
-            ]
-          }
-        ]
+export default {
+  name: 'chart-table',
+  props: {
+    tableData: {
+      type: Array,
+      default () {
+        return []
       }
+    },
+    dateArr: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    dateType: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      // tip: '初始事件触发的当天即为第 0 天，第 0 天留存用户数表示当天既进行了任意事件也进行了任意事件的用户。（不分前后顺序）',
+      // tableData: [
+      //   {
+      //     "beginDate": "2018-08-05",
+      //     "userCount": 62515,
+      //     "details": [
+      //       {
+      //         "beginDate": "2018-08-05",
+      //         "retainDate": "2018-08-05",
+      //         "userCount": 62515,
+      //         "diff": 0,
+      //         "percent": 100
+      //       },
+      //       {
+      //         "beginDate": "2018-08-05",
+      //         "retainDate": "2018-08-06",
+      //         "userCount": 9045,
+      //         "diff": 1,
+      //         "percent": 14.47
+      //       }
+      //     ]
+      //   }
+      // ]
     }
   }
+}
 </script>
 
 <style scoped>

@@ -23,86 +23,97 @@
 </template>
 
 <script>
-  import {formatDate} from "../../assets/common";
-  import {mapGetters} from 'vuex'
-  //默认取昨天
-  const end = new Date();
-  end.setDate(end.getDate() - 1);
+import {formatDate} from '../../assets/common'
+import {mapGetters} from 'vuex'
+// 默认取昨天
+const end = new Date()
+end.setDate(end.getDate() - 1)
 
-  export default {
-    computed: {
-      ...mapGetters(['eventParam']),
-      ...mapGetters(['funnelParam']),
-      ...mapGetters(['disParam']),
-    },
-    methods: {
-      datePickChange: function (val) {
-        if (val === null) {
-          return;
-        }
-
-        this.GLOBAL.beginDate = val[0];
-        this.GLOBAL.endDate = val[1];
-
-        //事件分析
-        this.eventParam.beginDate = this.GLOBAL.beginDate;
-        this.eventParam.endDate = this.GLOBAL.endDate;
-        if (this.eventParam.granularity === 'minute') {
-          this.eventParam.beginDate = this.eventParam.endDate;
-          this.GLOBAL.beginDate = this.GLOBAL.endDate;
-          this.$message('按分钟查看，时间范围最多展示一天');
-        }
-        this.$store.commit('updateEventParam', this.eventParam);
-
-        //漏斗分析
-        this.funnelParam.beginDate = this.GLOBAL.beginDate;
-        this.funnelParam.endDate = this.GLOBAL.endDate;
-        this.$store.commit('updateFunnelParam', this.funnelParam);
-
-        //分布分析
-        this.disParam.beginDate = this.GLOBAL.beginDate;
-        this.disParam.endDate = this.GLOBAL.endDate;
-        this.$store.commit('updateDisParam', this.disParam);
-
-        this.$store.commit('updateAutoRefreshCode', Math.random())
+export default {
+  computed: {
+    ...mapGetters(['eventParam']),
+    ...mapGetters(['funnelParam']),
+    ...mapGetters(['disParam']),
+    ...mapGetters(['retainParam']),
+    ...mapGetters(['durationParam'])
+  },
+  methods: {
+    datePickChange: function (val) {
+      if (val === null) {
+        return
       }
-    },
-    data() {
-      return {
-        pickerOptions2: {
-          disabledDate(time) {
-            return formatDate(time, 'yyyy-MM-dd') > formatDate(end, 'yyyy-MM-dd')
-          },
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
-        value6: '',
-        value7: '',
-        beginDate: this.GLOBAL.beginDate || '开始日期',
-        endDate: this.GLOBAL.endDate || '结束日期'
-      };
+
+      this.GLOBAL.beginDate = val[0]
+      this.GLOBAL.endDate = val[1]
+
+      // 事件分析
+      this.eventParam.beginDate = this.GLOBAL.beginDate
+      this.eventParam.endDate = this.GLOBAL.endDate
+      if (this.eventParam.granularity === 'minute') {
+        this.eventParam.beginDate = this.eventParam.endDate
+        this.GLOBAL.beginDate = this.GLOBAL.endDate
+        this.$message('按分钟查看，时间范围最多展示一天')
+      }
+      this.$store.commit('updateEventParam', this.eventParam)
+
+      // 漏斗分析
+      this.funnelParam.beginDate = this.GLOBAL.beginDate
+      this.funnelParam.endDate = this.GLOBAL.endDate
+      this.$store.commit('updateFunnelParam', this.funnelParam)
+
+      // 分布分析
+      this.disParam.beginDate = this.GLOBAL.beginDate
+      this.disParam.endDate = this.GLOBAL.endDate
+      this.$store.commit('updateDisParam', this.disParam)
+
+      // 留存分析
+      this.retainParam.beginDate = this.GLOBAL.beginDate
+      this.retainParam.endDate = this.GLOBAL.endDate
+      this.$store.commit('updateRetainParam', this.retainParam)
+      // 间隔分析
+      this.durationParam.beginDate = this.GLOBAL.beginDate
+      this.durationParam.endDate = this.GLOBAL.endDate
+      this.$store.commit('updateDurationParam', this.durationParam)
+
+      this.$store.commit('updateAutoRefreshCode', Math.random())
     }
-  };
+  },
+  data () {
+    return {
+      pickerOptions2: {
+        disabledDate (time) {
+          return formatDate(time, 'yyyy-MM-dd') > formatDate(end, 'yyyy-MM-dd')
+        },
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      value6: '',
+      value7: '',
+      beginDate: this.GLOBAL.beginDate || '开始日期',
+      endDate: this.GLOBAL.endDate || '结束日期'
+    }
+  }
+}
 </script>
 <style scoped>
   .left {

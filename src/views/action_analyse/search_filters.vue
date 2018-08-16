@@ -1,7 +1,6 @@
 <!--筛选条件-->
 <template>
   <div>
-
     <div id="filter-hold-place" class="ops-item" v-show="this.filterItems.length > 0">
       <div class="filter-group-control">
         <div id="filter-group-relation" class="filter-group-relation" v-show="this.filterItems.length > 1">
@@ -31,57 +30,70 @@
 </template>
 
 <script>
-  import SearchFilter from './search_filter'
+import SearchFilter from './search_filter'
 
-  import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 
-  export default {
-    name: 'search_filters',
-    components: {
-      SearchFilter
+export default {
+  name: 'search_filters',
+  components: {
+    SearchFilter
+  },
+  computed: {
+    ...mapGetters(['filterItems']),
+    ...mapGetters(['eventParam']),
+    ...mapGetters(['funnelParam']),
+    ...mapGetters(['disParam']),
+    ...mapGetters(['retainParam']),
+    ...mapGetters(['durationParam'])
+  },
+  props: {
+    title: {
+      type: String
     },
-    computed: {
-      ...mapGetters(['filterItems']),
-      ...mapGetters(['eventParam']),
-      ...mapGetters(['funnelParam']),
-      ...mapGetters(['disParam']),
-    },
-    props: {
-      title: {
-        type: String
+    typeData: {
+      type: Array
+    }
+  },
+  methods: {
+    relationSwitch: function () {
+      if (this.relation === 'and') {
+        this.relation = 'or'
+      } else {
+        this.relation = 'and'
       }
+      // 事件分析
+      this.eventParam.filter.relation = this.relation
+      this.$store.commit('updateEventParam', this.eventParam)
+
+      // 漏斗分析
+      this.funnelParam.filter.relation = this.relation
+      this.$store.commit('updateFunnelParam', this.funnelParam)
+
+      // 分布分析
+      this.disParam.filter.relation = this.relation
+      this.$store.commit('updateDisParam', this.disParam)
+
+      // 留存分析
+      this.retainParam.userFilter.relation = this.relation
+      this.$store.commit('updateRetainParam', this.retainParam)
+
+      // 间隔分析
+      this.durationParam.userFilter.relation = this.relation
+      this.$store.commit('updateDurationParam', this.durationParam)
+
+      this.$store.commit('updateAutoRefreshCode', Math.random())
     },
-    methods: {
-      relationSwitch: function () {
-        if (this.relation === 'and') {
-          this.relation = 'or';
-        } else {
-          this.relation = 'and';
-        }
-        //事件分析
-        this.eventParam.filter.relation = this.relation;
-        this.$store.commit('updateEventParam', this.eventParam);
-
-        //漏斗分析
-        this.funnelParam.filter.relation = this.relation;
-        this.$store.commit('updateFunnelParam', this.funnelParam);
-
-        //分布分析
-        this.disParam.filter.relation = this.relation;
-        this.$store.commit('updateDisParam', this.disParam);
-
-        this.$store.commit('updateAutoRefreshCode', Math.random());
-      },
-      filterAdd: function () {
-        this.$store.commit('addFilterItems');
-      }
-    },
-    data() {
-      return {
-        relation: 'and',
-      }
+    filterAdd: function () {
+      this.$store.commit('addFilterItems')
+    }
+  },
+  data () {
+    return {
+      relation: 'and'
     }
   }
+}
 </script>
 
 <style scoped>

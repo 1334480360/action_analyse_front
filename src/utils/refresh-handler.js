@@ -13,12 +13,12 @@ export default new Vue({
     ...mapGetters(['autoRefreshCode', 'autoRefreshChartList'])
   },
   watch: {
-    autoRefreshCode() {
-      this.repaintAutoRefreshList();
+    autoRefreshCode () {
+      this.repaintAutoRefreshList()
     }
   },
   methods: {
-    repaintAutoRefreshList() {
+    repaintAutoRefreshList () {
       console.log('Begin to repaintAutoRefresh!')
       this.autoRefreshChartList.forEach(chart => chart())
     }

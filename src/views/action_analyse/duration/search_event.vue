@@ -5,10 +5,10 @@
       <div class="measure-line-prefix">
         <span data-method="line-prefix">{{eventItems[index]}}</span>
       </div>
-      <!--任意事件 的 总次数-->
+      <!--事件选择-->
       <div id="normal-measure-line">
         <div id="select-event" class="selector select-event">
-          <el-select v-model="value1" placeholder="请选择" filterable style="width: 150px" @change="paramChange">
+          <el-select v-model="value1" placeholder="请选择" filterable style="width: 150px" @change="paramChange(index)">
             <el-option-group
               v-for="group in options1"
               :key="group.label"
@@ -23,7 +23,7 @@
             </el-option-group>
           </el-select>
         </div>
-        <span class="mg-8">的</span>
+        <!-- <span class="mg-8">的</span>
         <div id="select-measures" class="select-measures">
           <el-select v-model="value2" placeholder="请选择" style="width: 120px" @change="paramChange">
             <el-option
@@ -33,11 +33,11 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </div>
+        </div> -->
       </div>
-      <button @click="eventRemove" type="button" class="btn-icon btn-link" v-show="(this.index === (this.eventItems.length - 1)) && this.eventItems.length > 1">
+      <!-- <button @click="eventRemove" type="button" class="btn-icon btn-link" v-show="(this.index === (this.eventItems.length - 1)) && this.eventItems.length > 1">
         <span class="icon-remove"></span>
-      </button>
+      </button> -->
     </div>
     <div class="ops-item" data-container="single-filter"></div>
   </div>
@@ -49,8 +49,7 @@ import {mapGetters} from 'vuex'
 export default {
   name: 'search_event',
   computed: {
-    ...mapGetters(['eventItems']),
-    ...mapGetters(['eventParam'])
+    ...mapGetters(['durationParam'])
   },
   props: {
     index: {
@@ -65,26 +64,25 @@ export default {
       this.$store.commit('updateEventParam', this.eventParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
-    paramChange: function () {
+    paramChange: function (index) {
       let event = {
         pageName: this.value1.split('-')[0] || '',
-        eventName: this.value1.split('-')[1] || '',
-        metric: this.value2
+        eventName: this.value1.split('-')[1] || ''
       }
-      this.eventParam.events[this.index] = event
-      this.$store.commit('updateEventParam', this.eventParam)
+      if (index == 0) {
+        this.durationParam.firstEvent = event
+      } else if (index == 1) {
+        this.durationParam.secondEvent = event
+      }
+
+      this.$store.commit('updateDurationParam', this.durationParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     }
   },
   data () {
     return {
-      options1: [{
-        label: '任意事件',
-        options: [{
-          value: '',
-          label: '任意事件'
-        }]
-      }, {
+      eventItems: ['A', 'B'],
+      options1: [ {
         label: '个人中心',
         options: [{
           value: '个人中心-账号管理',
