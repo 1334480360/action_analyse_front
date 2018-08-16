@@ -30,7 +30,7 @@
       <!--图表模块-->
       <section class="report-chart"
                style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent;">
-          <line-chart :chart-data="charts" :total-show="false" v-loading="loading" :tip-type="tipType"></line-chart>
+          <line-chart :chart-data="charts" :total-show="false" v-loading="loading" :tip-type="tipType" business-type="retain"></line-chart>
       </section>
     </div>
   </div>
@@ -114,7 +114,7 @@ export default {
       this.handleDateType(this.retainParam.unit)
       this.dateArr = []
       this.tableData = []
-      let dateSet = new Set()
+      // let dateSet = new Set()
       for (let i = 0; i < data[0].details.length; i++) {
         this.dateArr.push(i)
       }

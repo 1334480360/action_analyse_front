@@ -37,6 +37,10 @@ export default {
       default () {
         return []
       }
+    },
+    businessType: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -88,7 +92,11 @@ export default {
       }
       return a - b
     },
-
+    filterRetainData (sourceData, saveMap) {
+      sourceData.map(value => {
+        saveMap.set(value.dimension, value.datas)
+      })
+    },
     setOptions: function (charts) {
       this.chart.clear()
       this.chart.showLoading({
@@ -114,26 +122,29 @@ export default {
       })
       let xAxisArr = Array.from(xAxisSet).sort(this.sort)
       let length = xAxisArr.length
-
       // 数据和坐标对应
-      charts.map(val1 => {
-        let seriesList = []
-        for (let i = 0; i < length; i++) {
-          seriesList[i] = 0
-        }
+      if (this.businessType === 'retain') {
+        this.filterRetainData(charts, seriesMap)
+      } else {
+        charts.map(val1 => {
+          let seriesList = []
+          for (let i = 0; i < length; i++) {
+            seriesList[i] = 0
+          }
 
-        val1.datas.map(val2 => {
-          if (val2.date !== '合计') {
-            for (let i = 0; i < length; i++) {
-              if (xAxisArr[i] === val2.date) {
-                seriesList.splice(i, 0, val2.value)
-                break
+          val1.datas.map(val2 => {
+            if (val2.date !== '合计') {
+              for (let i = 0; i < length; i++) {
+                if (xAxisArr[i] === val2.date) {
+                  seriesList.splice(i, 0, val2.value)
+                  break
+                }
               }
             }
-          }
+          })
+          seriesMap.set(val1.dimension, seriesList.slice(0, length))
         })
-        seriesMap.set(val1.dimension, seriesList.slice(0, length))
-      })
+      }
       this.chart.setOption({
         xAxis: {
           data: xAxisArr,
