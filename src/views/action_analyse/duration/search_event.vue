@@ -23,21 +23,7 @@
             </el-option-group>
           </el-select>
         </div>
-        <!-- <span class="mg-8">的</span>
-        <div id="select-measures" class="select-measures">
-          <el-select v-model="value2" placeholder="请选择" style="width: 120px" @change="paramChange">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div> -->
       </div>
-      <!-- <button @click="eventRemove" type="button" class="btn-icon btn-link" v-show="(this.index === (this.eventItems.length - 1)) && this.eventItems.length > 1">
-        <span class="icon-remove"></span>
-      </button> -->
     </div>
     <div class="ops-item" data-container="single-filter"></div>
   </div>
@@ -92,20 +78,7 @@ export default {
           label: '我的活动'
         }]
       }],
-      value1: '',
-
-      options2: [{
-        value: 'total_count',
-        label: '总次数'
-      }, {
-        value: 'user_count',
-        label: '触发用户数'
-      }, {
-        value: 'avg_count',
-        label: '人均次数'
-      }],
-      value2: 'total_count'
-
+      value1: ''
     }
   }
 }

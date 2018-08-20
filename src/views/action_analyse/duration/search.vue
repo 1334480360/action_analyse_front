@@ -20,9 +20,18 @@
       </div>
 
       <!--筛选条件-->
-      <search-filters title="事件符合"/>
-      <search-filters title="用户符合"/>
-
+      <search-filters
+        title="事件符合"
+        @filterRemove="eventRemove"
+        @paramChange="eventChange"
+        @relationSwitch="eventRelation"
+      />
+      <search-filters
+        title="用户符合"
+        @filterRemove="userRemove"
+        @paramChange="userChange"
+        @relationSwitch="userRelation"
+      />
     </section>
   </div>
 </template>
@@ -42,9 +51,8 @@ export default {
     SearchFilters
   },
   computed: {
-    ...mapGetters(['eventItems']),
     ...mapGetters(['groupItems']),
-    ...mapGetters(['eventParam'])
+    ...mapGetters(['durationParam'])
   },
   beforeDestroy () {
     this.$store.commit('initEventItems')
@@ -52,12 +60,41 @@ export default {
     this.$store.commit('initParam')
   },
   methods: {
-    eventAdd: function () {
-      this.$store.commit('addEventItems')
-
-      this.$store.commit('addEventParamEvent')
-      this.$store.commit('updateEventParam', this.eventParam)
-
+    eventRemove: function () {
+      this.$store.commit('removeDurationEventFilter')
+      this.$store.commit('updateDurationParam', this.durationParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    eventChange: function (data) {
+      console.log(data)
+      this.durationParam.eventFilter.conditions = data
+      if (this.durationParam.eventFilter.conditions.length > 1 && (this.durationParam.eventFilter.relation === '' || this.durationParam.eventFilter.relation == null)) {
+        this.durationParam.eventFilter.relation = 'and'
+      }
+      this.$store.commit('updateDurationParam', this.durationParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    eventRelation: function (relation) {
+      this.durationParam.eventFilter.relation = relation
+      this.$store.commit('updateDurationParam', this.durationParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    userRemove: function () {
+      this.$store.commit('removeDurationParamFilter')
+      this.$store.commit('updateDurationParam', this.durationParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    userChange: function (data) {
+      this.durationParam.userFilter.conditions = data
+      if (this.durationParam.userFilter.conditions.length > 1 && (this.durationParam.userFilter.relation === '' || this.durationParam.userFilter.relation == null)) {
+        this.durationParam.userFilter.relation = 'and'
+      }
+      this.$store.commit('updateDurationParam', this.durationParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    userRelation: function (relation) {
+      this.durationParam.userFilter.relation = relation
+      this.$store.commit('updateDurationParam', this.durationParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     }
   }

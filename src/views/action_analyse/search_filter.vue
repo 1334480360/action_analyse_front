@@ -44,20 +44,12 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: 'search_filter',
-  computed: {
-    ...mapGetters(['filterItems']),
-    ...mapGetters(['eventParam']),
-    ...mapGetters(['funnelParam']),
-    ...mapGetters(['disParam']),
-    ...mapGetters(['retainParam']),
-    ...mapGetters(['durationParam'])
-  },
   props: {
     index: {
       required: true,
       type: Number
     },
-    typeData: {
+    filterItems: {
       type: Array
     }
   },
@@ -71,31 +63,12 @@ export default {
   },
   methods: {
     filterRemove: function () {
-      this.$store.commit('removeFilterItems')
-
-      // 事件分析
-      this.$store.commit('removeEventParamFilter')
-      this.$store.commit('updateEventParam', this.eventParam)
-      // 漏斗分析
-      this.$store.commit('removeFunnelParamFilter')
-      this.$store.commit('updateFunnelParam', this.funnelParam)
-      // 分布分析
-      this.$store.commit('removeDisParamFilter')
-      this.$store.commit('updateDisParam', this.disParam)
-      // 留存分析
-      this.$store.commit('removeRetainParamFilter')
-      this.$store.commit('updateRetainParam', this.retainParam)
-      // 间隔分析
-      this.$store.commit('removeDurationParamFilter')
-      this.$store.commit('updateDurationParam', this.durationParam)
-
-      this.$store.commit('updateAutoRefreshCode', Math.random())
+      this.$emit('filterRemove')
     },
     paramChange: function () {
       if (this.value === null || this.value === '') {
         return
       }
-
       let condition = {
         dimensionCode: this.value3,
         function: this.value2,
@@ -103,42 +76,7 @@ export default {
           this.value
         ]
       }
-      // 事件分析
-      this.eventParam.filter.conditions[this.index] = condition
-      if (this.eventParam.filter.conditions.length > 1 && (this.eventParam.filter.relation === '' || this.eventParam.filter.relation == null)) {
-        this.eventParam.filter.relation = 'and'
-      }
-      this.$store.commit('updateEventParam', this.eventParam)
-
-      // 漏斗分析
-      this.funnelParam.filter.conditions[this.index] = condition
-      if (this.funnelParam.filter.conditions.length > 1 && (this.funnelParam.filter.relation === '' || this.funnelParam.filter.relation == null)) {
-        this.funnelParam.filter.relation = 'and'
-      }
-      this.$store.commit('updateFunnelParam', this.funnelParam)
-
-      // 分布分析
-      this.disParam.filter.conditions[this.index] = condition
-      if (this.disParam.filter.conditions.length > 1 && (this.disParam.filter.relation === '' || this.disParam.filter.relation == null)) {
-        this.disParam.filter.relation = 'and'
-      }
-      this.$store.commit('updateDisParam', this.disParam)
-
-      // 留存分析
-      this.retainParam.userFilter.conditions[this.index] = condition
-      if (this.retainParam.userFilter.conditions.length > 1 && (this.retainParam.userFilter.relation === '' || this.retainParam.userFilter.relation == null)) {
-        this.retainParam.userFilter.relation = 'and'
-      }
-      this.$store.commit('updateRetainParam', this.retainParam)
-
-      // 间隔分析
-      this.durationParam.userFilter.conditions[this.index] = condition
-      if (this.durationParam.userFilter.conditions.length > 1 && (this.durationParam.userFilter.relation === '' || this.durationParam.userFilter.relation == null)) {
-        this.durationParam.userFilter.relation = 'and'
-      }
-      this.$store.commit('updateDurationParam', this.durationParam)
-
-      this.$store.commit('updateAutoRefreshCode', Math.random())
+      this.$emit('paramChange', condition)
     }
   },
   data () {

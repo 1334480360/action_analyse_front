@@ -13,7 +13,10 @@
           <div class="relation-bottomline"></div>
         </div>
         <div class="filter-contain">
-          <search-filter v-for="(item, index) in filterItems" :index="index" :key="index"></search-filter>
+          <search-filter v-for="(item, index) in filterItems" :index="index" :key="index"
+          :filterItems="filterItems"
+          @filterRemove="filterRemove"
+          @paramChange="paramChange" ></search-filter>
         </div>
       </div>
     </div>
@@ -25,7 +28,6 @@
         <span class="icon-add"></span><span>筛选条件</span>
       </button>
     </div>
-
   </div>
 </template>
 
@@ -40,7 +42,7 @@ export default {
     SearchFilter
   },
   computed: {
-    ...mapGetters(['filterItems']),
+    // ...mapGetters(['filterItems']),
     ...mapGetters(['eventParam']),
     ...mapGetters(['funnelParam']),
     ...mapGetters(['disParam']),
@@ -50,9 +52,6 @@ export default {
   props: {
     title: {
       type: String
-    },
-    typeData: {
-      type: Array
     }
   },
   methods: {
@@ -62,35 +61,25 @@ export default {
       } else {
         this.relation = 'and'
       }
-      // 事件分析
-      this.eventParam.filter.relation = this.relation
-      this.$store.commit('updateEventParam', this.eventParam)
-
-      // 漏斗分析
-      this.funnelParam.filter.relation = this.relation
-      this.$store.commit('updateFunnelParam', this.funnelParam)
-
-      // 分布分析
-      this.disParam.filter.relation = this.relation
-      this.$store.commit('updateDisParam', this.disParam)
-
-      // 留存分析
-      this.retainParam.userFilter.relation = this.relation
-      this.$store.commit('updateRetainParam', this.retainParam)
-
-      // 间隔分析
-      this.durationParam.userFilter.relation = this.relation
-      this.$store.commit('updateDurationParam', this.durationParam)
-
-      this.$store.commit('updateAutoRefreshCode', Math.random())
+      this.$emit('relationSwitch', this.relation)
     },
     filterAdd: function () {
-      this.$store.commit('addFilterItems')
+      this.filterItems.push(Math.random())
+    },
+    filterRemove () {
+      this.filterItems.pop()
+      this.$emit('filterRemove')
+    },
+    paramChange (data) {
+      this.params.push(data)
+      this.$emit('paramChange', this.params)
     }
   },
   data () {
     return {
-      relation: 'and'
+      relation: 'and',
+      params: [],
+      filterItems: []
     }
   }
 }

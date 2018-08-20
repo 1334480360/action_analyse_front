@@ -65,6 +65,7 @@
           <!--</button>-->
         <!--</div>-->
       <!--</div>-->
+
       <!--表格-->
       <chart-table :table-data="tableData" :date-arr="dateArr" :is-total="eventParam.dimensions[0] === 0" v-loading="loading"/>
 

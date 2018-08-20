@@ -267,6 +267,12 @@ const date = {
         state.durationParam.userFilter.relation = ''
       }
     },
+    removeDurationEventFilter (state) {
+      state.durationParam.eventFilter.conditions.splice(state.durationParam.eventFilter.conditions.length - 1)
+      if (state.durationParam.eventFilter.conditions.length <= 1) {
+        state.durationParam.eventFilter.relation = ''
+      }
+    },
 
     initParam (state) {
       state.eventParam = null
@@ -274,6 +280,9 @@ const date = {
       state.disParam = null
       state.retainParam = null
       state.durationParam = null
+      state.eventItems = ['A']
+      state.groupItems = [0]
+      state.filterItems = []
 
       state.eventParam = {
         beginDate: formatDate(day3, 'yyyy-MM-dd'),

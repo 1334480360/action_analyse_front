@@ -24,7 +24,11 @@
       </div>
 
       <!--筛选条件-->
-      <search-filters/>
+      <search-filters
+      @filterRemove="filterRemove"
+      @paramChange="paramChange"
+      @relationSwitch="relationSwitch"
+      />
 
     </section>
   </div>
@@ -61,6 +65,24 @@ export default {
       this.$store.commit('addEventParamEvent')
       this.$store.commit('updateEventParam', this.eventParam)
 
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    filterRemove () {
+      this.$store.commit('removeEventParamFilter')
+      this.$store.commit('updateEventParam', this.eventParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    paramChange (data) {
+      this.eventParam.filter.conditions = data
+      if (this.eventParam.filter.conditions.length > 1 && (this.eventParam.filter.relation === '' || this.eventParam.filter.relation == null)) {
+        this.eventParam.filter.relation = 'and'
+      }
+      this.$store.commit('updateEventParam', this.eventParam)
+      this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    relationSwitch (relation) {
+      this.eventParam.filter.relation = relation
+      this.$store.commit('updateEventParam', this.eventParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     }
   }

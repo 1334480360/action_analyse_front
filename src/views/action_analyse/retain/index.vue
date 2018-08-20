@@ -29,8 +29,20 @@
 
       <!--图表模块-->
       <section class="report-chart"
-               style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent;">
-          <line-chart :chart-data="charts" :total-show="false" v-loading="loading" :tip-type="tipType" business-type="retain"></line-chart>
+               style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent; text-align: center;">
+          <el-button-group>
+            <el-button size="small"
+              :type="lineType == 'person' ? 'primary' : ''"
+              :style="lineType == 'person' ? 'color: #fff': 'color: #606266'"
+              @click="lineType = 'person'">留存人数
+            </el-button>
+            <el-button size="small"
+              :type="lineType == 'percent' ? 'primary' : ''"
+              @click="lineType = 'percent'">留存百分比
+            </el-button>
+          </el-button-group>
+          <line-chart :chart-data="personData" v-if="lineType === 'person'" :total-show="false" v-loading="loading" :tip-type="tipType" business-type="retain"></line-chart>
+          <line-chart :chart-data="percentData" v-if="lineType === 'percent'" :total-show="false" v-loading="loading" :tip-type="tipType" business-type="retain"></line-chart>
       </section>
     </div>
   </div>
@@ -129,11 +141,12 @@ export default {
         this.tableData.push(obj)
       }
     },
-    setLineData: function (data) {
+    setPersonData: function (data) {
       let arr = []
       for (let i = 0; i < data[0].details.length; i++) {
         arr.push({datas: [], dimension: `第 ${i} ${this.dateType}`})
       }
+
       for (let i = 0; i < arr.length; i++) {
         for (let j = 0; j < data.length; j++) {
           if (data[j].details[i]) {
@@ -141,14 +154,26 @@ export default {
           }
         }
       }
-      console.log(arr)
-      console.log('line', data)
-      this.charts = arr
+      this.personData = arr
+    },
+    setPercentData: function (data) {
+      let arr = []
+      for (let i = 0; i < data[0].details.length; i++) {
+        arr.push({datas: [], dimension: `第 ${i} ${this.dateType}`})
+      }
+
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < data.length; j++) {
+          if (data[j].details[i]) {
+            arr[i].datas.push({value: data[j].details[i].percent, date: this.handleDate(data[j].details[i].retainDate)})
+          }
+        }
+      }
+      this.percentData = arr
     },
     async queryRetain () {
       this.loading = true
       queryRetain(this.retainParam).then(res => {
-        console.log(res)
         if (res.data.result === 'fail') {
           this.$message.error(res.data.message)
         }
@@ -156,13 +181,15 @@ export default {
 
         // 重新组装charts
         this.setTableData(JSON.parse(JSON.stringify(this.data)))
-        this.setLineData(JSON.parse(JSON.stringify(this.data)))
+        this.setPersonData(JSON.parse(JSON.stringify(this.data)))
+        this.setPercentData(JSON.parse(JSON.stringify(this.data)))
         this.loading = false
 
         // 添加方法到自动刷新列表
         this.$store.commit('addToAutoRefreshChartList', this.queryRetain)
       })
     }
+
   },
   data () {
     return {
@@ -180,10 +207,9 @@ export default {
       dateArr: [],
       dateType: '',
       tipType: 'item',
-      charts: [
-        {datas: [{value: 234, date: '7-1(日)'}, {value: 14, date: '7-2(一)'}], dimension: '第 0 天'},
-        {datas: [{value: 34, date: '7-1(日)'}, {value: 144, date: '7-2(一)'}], dimension: '第 1 天'}
-      ]
+      personData: [],
+      percentData: [],
+      lineType: 'person'
     }
   }
 }
