@@ -90,3 +90,12 @@ export function queryDuration (param) {
     data: param
   })
 }
+
+// 获取事件数据列表
+export function queryEventList (param) {
+  return request({
+    url: baseUrl + '/analysis/base/getEvents',
+    method: 'post',
+    data: param
+  })
+}

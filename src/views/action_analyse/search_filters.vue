@@ -16,7 +16,10 @@
           <search-filter v-for="(item, index) in filterItems" :index="index" :key="index"
           :filterItems="filterItems"
           @filterRemove="filterRemove"
-          @paramChange="paramChange" ></search-filter>
+          @paramChange="paramChange"
+          :selectData="selectData"
+          :funcData="funcData"
+          ></search-filter>
         </div>
       </div>
     </div>
@@ -52,6 +55,12 @@ export default {
   props: {
     title: {
       type: String
+    },
+    selectData: {
+      type: Array
+    },
+    funcData: {
+      type: Array
     }
   },
   methods: {

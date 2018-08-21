@@ -86,7 +86,7 @@ import ChartSearch from './chart_search'
 import ChartTable from './chart_table'
 import RefreshHandler from '../../../utils/refresh-handler'
 
-import {queryDuration} from '../../../api/module_index'
+import {queryDuration , queryEventList} from '../../../api/module_index'
 import {formatStrToDate} from '../../../assets/common'
 import {mapGetters} from 'vuex'
 
@@ -110,6 +110,7 @@ export default {
     this.GLOBAL.endDate = this.durationParam.endDate
   },
   mounted () {
+    //this.getEventList()
     this.getDurationResult()
   },
   beforeDestroy () {
@@ -127,111 +128,11 @@ export default {
       return a.group >= b.group ? 1 : -1
     },
     paramChange: function () {
+
       this.durationParam.productName = this.value
       this.$store.commit('updateDurationParam', this.durationParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
-    // setCharts: function (data) {
-    //   if(data === null || data.length < 1){
-    //     return;
-    //   }
-    //   this.charts = [];
-    //   for (let i=0; i<data.length; i++) {
-    //     let chart0 = data[i].charts;
-    //     for (let j=0; j<chart0.length; j++) {
-    //       let chart00 = chart0[j];
-    //       if(this.eventParam.dimensions[0] > 1){
-    //         //分组名称
-    //         chart00.dimension = chart00.datas[1].name + '-' + chart00.dimension;
-    //         chart00.datas.splice(0, 1);
-    //       }
-    //       this.charts.push(chart00);
-    //     }
-    //   }
-    //   console.log(this.charts);
-    // },
-    // setTableData: function (data) {
-    //   this.dateArr = [];
-    //   this.tableData = [];
-    //   let dateSet = new Set();
-    //   let dataArr = [];
-
-    //   for (let i=0; i<data.length; i++) {
-    //     let chart0 = data[i].charts;
-    //     for (let j=0; j<chart0.length; j++) {
-    //       let chart00 = chart0[j];
-    //       let datas = chart0[j].datas;
-    //       for (let k=0; k<datas.length; k++) {
-    //         let date = datas[k];
-    //         date.dimension = chart00.dimension;
-    //         if(date.date !== '合计'){
-    //           dateSet.add(date.date);
-    //         }
-    //       }
-    //       dataArr.push(datas);
-    //     }
-    //   }
-
-    //   this.dateArr = Array.from(dateSet).sort(this.sort);
-
-    //   for (let i=0; i<dataArr.length; i++) {
-    //     let data0 = dataArr[i];
-    //     let tr = {};
-    //     tr.group = data0[1].name;
-    //     tr.dimension = data0[1].dimension;
-    //     tr.ammount = data0[0].value;
-    //     let dates =[];
-    //     for (let j=0; j<this.dateArr.length; j++) {
-    //       dates[j] = 0;
-    //     }
-
-    //     for (let k=0; k<data0.length; k++) {
-    //       for (let m=0; m<this.dateArr.length; m++) {
-    //         if (data0[k].date === this.dateArr[m]) {
-    //           dates[m] = data0[k].value;
-    //           break;
-    //         }
-    //       }
-    //     }
-
-    //     tr.dates = dates;
-    //     this.tableData.push(tr);
-    //   }
-
-    //   this.tableData.sort(this.sortByLetter);
-    //   console.log(this.dateArr,this.tableData)
-    // },
-    // setPieData: function (data) {
-    //   this.pieData = [];
-    //   let dateSet = new Set();
-    //   let dataArr = [];
-
-    //   for (let i=0; i<data.length; i++) {
-    //     let chart0 = data[i].charts;
-    //     for (let j=0; j<chart0.length; j++) {
-    //       let chart00 = chart0[j];
-    //       let datas = chart0[j].datas;
-    //       for (let k=0; k<datas.length; k++) {
-    //         let date = datas[k];
-    //         date.dimension = chart00.dimension;
-    //         if(date.date !== '合计'){
-    //           dateSet.add(date.date);
-    //         }
-    //       }
-    //       dataArr.push(datas);
-    //     }
-    //   }
-
-    //   for (let i=0; i<dataArr.length; i++) {
-    //     let data0 = dataArr[i];
-    //     let tr = {};
-    //     tr.name = data0[1].name;
-    //     tr.seriesName = data0[1].dimension;
-    //     tr.value = data0[0].value;
-    //     this.pieData.push(tr);
-    //   }
-
-    // },
     async getDurationResult () {
       this.loading = true
       console.log(this.durationParam)
@@ -250,6 +151,15 @@ export default {
 
         // 添加方法到自动刷新列表
         this.$store.commit('addToAutoRefreshChartList', this.getDurationResult)
+      })
+    },
+    async getEventList () {
+      queryEventList(this.durationParam.productName).then(res => {
+         if (res.data.result === 'fail') {
+          this.$message.error(res.data.message)
+        }
+        this.data = res.data.data
+        console.log('event', res)
       })
     }
   },

@@ -5,10 +5,12 @@
       <!--筛选条件-->
       <div class="ops-item">
         <search-filters
-        title="用户符合"
-        @filterRemove="filterRemove"
-        @paramChange="paramChange"
-        @relationSwitch="relationSwitch"
+          title="用户符合"
+          @filterRemove="filterRemove"
+          @paramChange="paramChange"
+          @relationSwitch="relationSwitch"
+          :selectData="mixData"
+          :funcData="funcData"
          />
       </div>
     </div>
@@ -18,7 +20,7 @@
 <script>
 import SearchFilters from '../search_filters'
 import RefreshHandler from '../../../utils/refresh-handler'
-
+import {mixData, funcData} from '../../../utils/staticData'
 import {funnelList} from '../../../api/module_index'
 import {mapGetters} from 'vuex'
 
@@ -29,6 +31,10 @@ export default {
   },
   computed: {
     ...mapGetters(['retainParam'])
+  },
+  mounted () {
+    this.mixData = mixData
+    this.funcData = funcData
   },
   methods: {
     filterRemove: function () {
@@ -52,7 +58,8 @@ export default {
   },
   data () {
     return {
-
+      mixData: [],
+      funcData: []
     }
   }
 }

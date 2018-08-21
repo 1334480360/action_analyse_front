@@ -19,17 +19,17 @@
 
       <!--按分组查看-->
       <div id="segmentation-group-hold-place" class="ops-item">
-        <!--分组-->
         <search-group v-for="(item, index) in groupItems" :index="index" :key="index"></search-group>
       </div>
 
       <!--筛选条件-->
       <search-filters
-      @filterRemove="filterRemove"
-      @paramChange="paramChange"
-      @relationSwitch="relationSwitch"
+        @filterRemove="filterRemove"
+        @paramChange="paramChange"
+        @relationSwitch="relationSwitch"
+        :selectData="mixData"
+        :funcData="funcData"
       />
-
     </section>
   </div>
 </template>
@@ -38,11 +38,17 @@
 import SearchEvent from './search_event'
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
-
+import {mixData, funcData} from '../../../utils/staticData'
 import {mapGetters} from 'vuex'
 
 export default {
   name: 'search',
+  data() {
+    return {
+      mixData: [],
+      funcData: [],
+    }
+  },
   components: {
     SearchEvent,
     SearchGroup,
@@ -57,6 +63,10 @@ export default {
     this.$store.commit('initEventItems')
     this.$store.commit('initGroupItems')
     this.$store.commit('initParam')
+  },
+  mounted() {
+    this.mixData = mixData
+    this.funcData = funcData
   },
   methods: {
     eventAdd: function () {

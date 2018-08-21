@@ -138,7 +138,7 @@ export const asyncRouterMap = [
       }
     }, {
       path: 'user_path',
-      component: () => import('@/views/action_analyse/event/index'),
+      component: () => import('@/views/action_analyse/route/index'),
       name: 'user_path',
       meta: {
         title: 'user_path',

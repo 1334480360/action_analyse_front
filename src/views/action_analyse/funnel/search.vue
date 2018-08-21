@@ -23,9 +23,11 @@
 
       <!--筛选条件-->
       <search-filters
-      @filterRemove="filterRemove"
-      @paramChange="paramChange"
-      @relationSwitch="relationSwitch"
+        @filterRemove="filterRemove"
+        @paramChange="paramChange"
+        @relationSwitch="relationSwitch"
+        :selectData="mixData"
+        :funcData="funcData"
       />
 
     </section>
@@ -36,6 +38,7 @@
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
 import RefreshHandler from '../../../utils/refresh-handler'
+import {mixData, funcData} from '../../../utils/staticData'
 
 import {funnelList} from '../../../api/module_index'
 import {mapGetters} from 'vuex'
@@ -53,6 +56,8 @@ export default {
   },
   mounted () {
     this.getFunnelList()
+    this.mixData = mixData
+    this.funcData = funcData
   },
   watch: {
     appName () {
@@ -71,7 +76,9 @@ export default {
   data () {
     return {
       funnels: [],
-      value: null
+      value: null,
+      mixData: [],
+      funcData: []
     }
   },
   methods: {

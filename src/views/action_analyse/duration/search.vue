@@ -25,12 +25,16 @@
         @filterRemove="eventRemove"
         @paramChange="eventChange"
         @relationSwitch="eventRelation"
+        :funcData="funcData"
+        :selectData="eventData"
       />
       <search-filters
         title="用户符合"
         @filterRemove="userRemove"
         @paramChange="userChange"
         @relationSwitch="userRelation"
+        :funcData="funcData"
+        :selectData="userData"
       />
     </section>
   </div>
@@ -40,11 +44,19 @@
 import SearchEvent from './search_event'
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
+import {eventData, userData, funcData} from '../../../utils/staticData'
 
 import {mapGetters} from 'vuex'
 
 export default {
   name: 'search',
+  data() {
+    return {
+      eventData: [],
+      userData: [],
+      funcData: []
+    }
+  },
   components: {
     SearchEvent,
     SearchGroup,
@@ -58,6 +70,11 @@ export default {
     this.$store.commit('initEventItems')
     this.$store.commit('initGroupItems')
     this.$store.commit('initParam')
+  },
+  mounted () {
+    this.eventData = eventData
+    this.userData = userData
+    this.funcData = funcData
   },
   methods: {
     eventRemove: function () {

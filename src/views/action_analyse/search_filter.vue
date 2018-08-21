@@ -3,9 +3,9 @@
   <div class="filter-item">
     <span class="property"></span>
     <div class="selector property" style="width: auto">
-      <el-select v-model="value3" placeholder="请选择" filterable style="width: 180px" @change="paramChange">
+      <el-select v-model="selectValue" placeholder="请选择" filterable style="width: 180px" @change="paramChange">
         <el-option-group
-          v-for="group in options3"
+          v-for="group in selections"
           :key="group.label"
           :label="group.label">
           <el-option
@@ -18,9 +18,9 @@
       </el-select>
     </div>
     <div class="selector function">
-      <el-select v-model="value2" placeholder="请选择" style="width: 120px" @change="paramChange">
+      <el-select v-model="funcValue" placeholder="请选择" style="width: 120px" @change="paramChange">
         <el-option
-          v-for="item in options2"
+          v-for="item in funcSelect"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -51,14 +51,20 @@ export default {
     },
     filterItems: {
       type: Array
+    },
+    selectData: {
+      type: Array
+    },
+    funcData: {
+      type: Array
     }
   },
   mounted () {
-    let length = this.options3[0].options.length
+    let length = this.selectData[0].options.length
     if (length <= this.index) {
-      this.value3 = this.options3[1].options[this.index - length].value
+      this.selectValue = this.selectData[1].options[this.index - length].value
     } else {
-      this.value3 = this.options3[0].options[this.index].value
+      this.selectValue = this.selectData[0].options[this.index].value
     }
   },
   methods: {
@@ -70,8 +76,8 @@ export default {
         return
       }
       let condition = {
-        dimensionCode: this.value3,
-        function: this.value2,
+        dimensionCode: this.selectValue,
+        function: this.funcValue,
         params: [
           this.value
         ]
@@ -83,59 +89,10 @@ export default {
     return {
       value: '',
       relation: 'and',
-      options2: [{
-        value: 'equal',
-        label: '等于'
-      }, {
-        value: 'not_equal',
-        label: '不等于'
-      }, {
-        value: 'contain',
-        label: '包含'
-      }, {
-        value: 'not_contain',
-        label: '不包含'
-      }, {
-        value: 'null',
-        label: '没值'
-      }, {
-        value: 'not_null',
-        label: '有值'
-      }, {
-        value: 'empty',
-        label: '为空'
-      }, {
-        value: 'not_empty',
-        label: '不为空'
-      }, {
-        value: 'regex_match',
-        label: '正则匹配'
-      }, {
-        value: 'regex_not_match',
-        label: '正则不匹配'
-      }],
-      value2: 'equal',
-
-      options3: [{
-        label: '事件属性',
-        options: [{
-          value: '24',
-          label: '操作系统'
-        }, {
-          value: '21',
-          label: '屏幕宽度'
-        }]
-      }, {
-        label: '用户属性',
-        options: [{
-          value: '49',
-          label: '省份'
-        }, {
-          value: '51',
-          label: '手机运营商'
-        }]
-      }],
-      value3: '24'
+      funcSelect: this.funcData,
+      funcValue: this.funcData[0].value,
+      selections: this.selectData,
+      selectValue: this.selectData[0].value
     }
   }
 }

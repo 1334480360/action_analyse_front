@@ -41,9 +41,11 @@
     <!--筛选条件-->
     <div class="ops-item">
       <search-filters
-      @filterRemove="filterRemove"
-      @paramChange="paramChange"
-      @relationSwitch="relationSwitch"
+        @filterRemove="filterRemove"
+        @paramChange="paramChange"
+        @relationSwitch="relationSwitch"
+        :selectData="mixData"
+        :funcData="funcData"
       />
     </div>
 
@@ -54,6 +56,7 @@
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
 import RefreshHandler from '../../../utils/refresh-handler'
+import {mixData, funcData} from '../../../utils/staticData'
 
 import {funnelList} from '../../../api/module_index'
 import {mapGetters} from 'vuex'
@@ -67,6 +70,10 @@ export default {
   computed: {
     ...mapGetters(['appName']),
     ...mapGetters(['disParam'])
+  },
+  mounted() {
+    this.mixData = mixData
+    this.funcData = funcData
   },
   methods: {
     handleSelect: function () {
@@ -97,6 +104,8 @@ export default {
   data () {
     return {
       funnels: [],
+      mixData: [],
+      funcData: [],
       value: null,
       options1: [{
         label: '任意事件',
