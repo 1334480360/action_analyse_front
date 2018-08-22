@@ -114,6 +114,40 @@ const durationParam = {
   }
 }
 
+const routeParam = {
+  productName: 'my-dafy',
+  beginDate: formatDate(day3, 'yyyy-MM-dd'),
+  endDate: formatDate(day1, 'yyyy-MM-dd'),
+  events: [],
+  dimensions: [],
+  eventFilter: {
+    relation: '',
+    conditions: [
+      {
+        dimensionCode: 0,
+        function: '',
+        params: [
+          ''
+        ]
+      }
+    ]
+  },
+  userFilter: {
+    relation: '',
+    conditions: [
+      {
+        dimensionCode: 0,
+        function: '',
+        params: [
+          ''
+        ]
+      }
+    ]
+  },
+  specifiedEvent: {},
+  isBegin: true
+}
+
 const date = {
   state: {
     beginDate: formatDate(day1, 'yyyy-MM-dd'),
@@ -131,7 +165,8 @@ const date = {
     funnelParam: funnelParam,
     disParam: disParam,
     retainParam: retainParam,
-    durationParam: durationParam
+    durationParam: durationParam,
+    routeParam: routeParam
   },
   mutations: {
     addToAutoRefreshChartList (state, chart) {
@@ -274,12 +309,30 @@ const date = {
       }
     },
 
+    updateRouteParam (state, param) {
+      state.routeParam = null
+      state.routeParam = param
+    },
+    removeRouteParamFilter (state) {
+      state.routeParam.userFilter.conditions.splice(state.routeParam.userFilter.conditions.length - 1)
+      if (state.routeParam.userFilter.conditions.length <= 1) {
+        state.routeParam.userFilter.relation = ''
+      }
+    },
+    removeDurationEventFilter (state) {
+      state.routeParam.eventFilter.conditions.splice(state.routeParam.eventFilter.conditions.length - 1)
+      if (state.routeParam.eventFilter.conditions.length <= 1) {
+        state.routeParam.eventFilter.relation = ''
+      }
+    },
+
     initParam (state) {
       state.eventParam = null
       state.funnelParam = null
       state.disParam = null
       state.retainParam = null
       state.durationParam = null
+      state.routeParam = null
       state.eventItems = ['A']
       state.groupItems = [0]
       state.filterItems = []
@@ -370,6 +423,39 @@ const date = {
             }
           ]
         }
+      }
+      state.routeParam = {
+        productName: 'my-dafy',
+        beginDate: formatDate(day3, 'yyyy-MM-dd'),
+        endDate: formatDate(day1, 'yyyy-MM-dd'),
+        events: [],
+        dimensions: [],
+        eventFilter: {
+          relation: '',
+          conditions: [
+            {
+              dimensionCode: 0,
+              function: '',
+              params: [
+                ''
+              ]
+            }
+          ]
+        },
+        userFilter: {
+          relation: '',
+          conditions: [
+            {
+              dimensionCode: 0,
+              function: '',
+              params: [
+                ''
+              ]
+            }
+          ]
+        },
+        specifiedEvent: {},
+        isBegin: true
       }
     }
   }

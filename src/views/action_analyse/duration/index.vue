@@ -23,7 +23,7 @@
 
     <div class="sa-report">
       <!--数据搜索条件-->
-      <search/>
+       <search :eventList="eventList"/>
       <!--图表搜索条件-->
       <chart-search/>
       <!--图表显示区域-->
@@ -110,7 +110,7 @@ export default {
     this.GLOBAL.endDate = this.durationParam.endDate
   },
   mounted () {
-    //this.getEventList()
+    this.getEventsList(this.durationParam.productName)
     this.getDurationResult()
   },
   beforeDestroy () {
@@ -128,10 +128,33 @@ export default {
       return a.group >= b.group ? 1 : -1
     },
     paramChange: function () {
-
       this.durationParam.productName = this.value
+      this.getEventsList(this.durationParam.productName)
       this.$store.commit('updateDurationParam', this.durationParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    getEventsList(param) {
+      queryEventList({productName: param}).then(res=> {
+        this.eventList = this.handleEventData(res.data.data)
+      }).catch(err=> {
+        this.$message.error(err)
+      })
+    },
+    handleEventData(data) {
+      let arr = []
+     
+      for (let pageName in data) {
+        let tempObj = {label: '', options: []}
+     
+        tempObj.label = pageName
+        for (let i = 0; i < data[pageName].length; i++) {
+          let subObj = {}
+          subObj = {value: `${pageName}-${data[pageName][i].eventName}`, label: data[pageName][i].eventName}
+          tempObj.options.push(subObj)
+        }
+        arr.push(tempObj)
+      }
+      return arr
     },
     async getDurationResult () {
       this.loading = true
@@ -152,15 +175,6 @@ export default {
         // 添加方法到自动刷新列表
         this.$store.commit('addToAutoRefreshChartList', this.getDurationResult)
       })
-    },
-    async getEventList () {
-      queryEventList(this.durationParam.productName).then(res => {
-         if (res.data.result === 'fail') {
-          this.$message.error(res.data.message)
-        }
-        this.data = res.data.data
-        console.log('event', res)
-      })
     }
   },
   data () {
@@ -170,6 +184,7 @@ export default {
       tableData: [],
       pieData: [],
       dateArr: [],
+      eventList: [],
       loading: true,
       options: [{
         value: 'my-dafy',

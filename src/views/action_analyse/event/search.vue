@@ -10,7 +10,7 @@
     <section class="report-ops" id="report-ops">
       <div class="ops-item measures-container">
         <!--事件-->
-        <search-event v-for="(item, index) in eventItems" :index="index" :key="index"></search-event>
+        <search-event :eventList="eventList" v-for="(item, index) in eventItems" :index="index" :key="index"></search-event>
         <!--＋号-->
         <button @click="eventAdd" type="button" class="event-measure-add-new" data-placement="right">
           <span class="icon-new"></span>
@@ -19,7 +19,7 @@
 
       <!--按分组查看-->
       <div id="segmentation-group-hold-place" class="ops-item">
-        <search-group v-for="(item, index) in groupItems" :index="index" :key="index"></search-group>
+        <search-group v-for="(item, index) in groupItems" :selectData="commonData" :index="index" :key="index"></search-group>
       </div>
 
       <!--筛选条件-->
@@ -38,7 +38,7 @@
 import SearchEvent from './search_event'
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
-import {mixData, funcData} from '../../../utils/staticData'
+import {mixData, funcData, unitData} from '../../../utils/staticData'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -47,6 +47,12 @@ export default {
     return {
       mixData: [],
       funcData: [],
+      commonData: []
+    }
+  },
+  props: {
+    eventList: {
+      type: Array
     }
   },
   components: {
@@ -67,6 +73,7 @@ export default {
   mounted() {
     this.mixData = mixData
     this.funcData = funcData
+    this.commonData = unitData
   },
   methods: {
     eventAdd: function () {

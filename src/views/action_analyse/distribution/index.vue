@@ -20,7 +20,7 @@
     </div>
     <div class="sa-report">
       <!--数据搜索条件-->
-      <search/>
+      <search :eventList="eventList" />
 
       <chart-search/>
 
@@ -37,7 +37,7 @@
   import ChartTable from './chart_table'
 
   import {mapGetters} from 'vuex'
-  import {queryDistribution} from "../../../api/module_index";
+  import {queryDistribution,queryEventList} from "../../../api/module_index";
 
   export default {
     name: 'index',
@@ -55,6 +55,7 @@
       this.appNameChange();
     },
     mounted() {
+      this.getEventsList(this.disParam.appName)
       this.queryDistribution();
     },
     beforeDestroy() {
@@ -67,10 +68,43 @@
       },
       appNameChange: function () {
         this.disParam.appName = this.value;
+        this.getEventsList(this.disParam.appName)
         this.$store.commit('updateDisParam', this.disParam);
         this.$store.commit('updateAppName', this.value);
 
         this.$store.commit('updateAutoRefreshCode', Math.random());
+      },
+      getEventsList(param) {
+        let obj = {
+          label: '任意事件',
+          options: [{
+            value: '',
+            label: '任意事件'
+          }]
+        }
+        queryEventList({productName: param}).then(res=> {
+          let arr = this.handleEventData(res.data.data);
+          arr.unshift(obj)
+          this.eventList = arr
+        }).catch(err=> {
+          this.$message.error(err)
+        })
+      },
+      handleEventData(data) {
+        let arr = []
+      
+        for (let pageName in data) {
+          let tempObj = {label: '', options: []}
+      
+          tempObj.label = pageName
+          for (let i = 0; i < data[pageName].length; i++) {
+            let subObj = {}
+            subObj = {value: `${pageName}-${data[pageName][i].eventName}`, label: data[pageName][i].eventName}
+            tempObj.options.push(subObj)
+          }
+          arr.push(tempObj)
+        }
+        return arr
       },
       async queryDistribution() {
         this.loading = true;
@@ -99,6 +133,7 @@
         value: 'my-dafy',
         tableData: [],
         loading: true,
+        eventList: [],
       }
     }
   }

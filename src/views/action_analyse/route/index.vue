@@ -20,7 +20,7 @@
     </div>
     <div class="sa-report">
       <!--数据搜索条件-->
-      <search/>
+      <search :eventList="eventList" />
       <!--图表搜索条件-->
       <chart-search/>
       <!--图表展示区域-->
@@ -37,7 +37,7 @@ import Search from './search'
 import ChartSearch from './chart_search'
 
 import {mapGetters} from 'vuex'
-import {queryRetain} from '../../../api/module_index'
+import {queryRoute, queryEventList } from '../../../api/module_index'
 
 export default {
   name: 'index',
@@ -46,14 +46,15 @@ export default {
     ChartSearch
   },
   computed: {
-    ...mapGetters(['retainParam'])
+    ...mapGetters(['routeParam'])
   },
   created () {
-    this.GLOBAL.beginDate = this.retainParam.beginDate
-    this.GLOBAL.endDate = this.retainParam.endDate
+    this.GLOBAL.beginDate = this.routeParam.beginDate
+    this.GLOBAL.endDate = this.routeParam.endDate
   },
   mounted () {
-    this.queryRetain()
+    this.getEventsList(this.routeParam.productName)
+    this.queryRoute()
   },
   beforeDestroy () {
     this.$store.commit('clearChartList')
@@ -64,43 +65,36 @@ export default {
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
     paramChange: function () {
-      this.retainParam.productName = this.value
-      this.$store.commit('updateRetainParam', this.retainParam)
+      this.routeParam.productName = this.value
+      this.getEventsList(this.routeParam.productName)
+      this.$store.commit('updateRouteParam', this.routeParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
     sortByLetter: function (a, b) {
       return a.group >= b.group ? 1 : -1
     },
-    handleDateType (type) {
-      switch (type) {
-        case 'day':
-          this.dateType = '天'
-          break
-        case 'week':
-          this.dateType = '周'
-          break
-        case 'month':
-          this.dateType = '月'
-          break
-      }
+    getEventsList(param) {
+      queryEventList({productName: param}).then(res=> {
+        this.eventList = this.handleEventData(res.data.data)
+      }).catch(err=> {
+        this.$message.error(err)
+      })
     },
-    handleDate (date) {
-      let newDate = ''
-      const dateArr = date.split('-')
-      switch (this.retainParam.unit) {
-        case 'day':
-          let day = new Date(date).getDay()
-          const dayArr = ['日', '一', '二', '三', '四', '五', '六']
-          newDate = `${parseInt(dateArr[1])}-${parseInt(dateArr[2])}(${dayArr[day]})`
-          break
-        case 'week':
-          newDate = `${parseInt(dateArr[1])}-${parseInt(dateArr[2])}当周`
-          break
-        case 'month':
-          newDate = `${parseInt(dateArr[1])}月`
-          break
+    handleEventData(data) {
+      let arr = []
+     
+      for (let pageName in data) {
+        let tempObj = {label: '', options: []}
+     
+        tempObj.label = pageName
+        for (let i = 0; i < data[pageName].length; i++) {
+          let subObj = {}
+          subObj = {value: `${pageName}-${data[pageName][i].eventName}`, label: data[pageName][i].eventName}
+          tempObj.options.push(subObj)
+        }
+        arr.push(tempObj)
       }
-      return newDate
+      return arr
     },
     setTableData: function (data) {
       this.handleDateType(this.retainParam.unit)
@@ -151,24 +145,42 @@ export default {
       }
       this.percentData = arr
     },
-    async queryRetain () {
+    queryRoute: function() {
       this.loading = true
-      queryRetain(this.retainParam).then(res => {
+      queryRoute(this.routeParam).then(res => {
         if (res.data.result === 'fail') {
           this.$message.error(res.data.message)
         }
         this.data = res.data.data
-
+        console.log(this.data)
         // 重新组装charts
-        this.setTableData(JSON.parse(JSON.stringify(this.data)))
-        this.setPersonData(JSON.parse(JSON.stringify(this.data)))
-        this.setPercentData(JSON.parse(JSON.stringify(this.data)))
+        // this.setTableData(JSON.parse(JSON.stringify(this.data)))
+        // this.setPersonData(JSON.parse(JSON.stringify(this.data)))
+        // this.setPercentData(JSON.parse(JSON.stringify(this.data)))
         this.loading = false
 
         // 添加方法到自动刷新列表
-        this.$store.commit('addToAutoRefreshChartList', this.queryRetain)
+        this.$store.commit('addToAutoRefreshChartList', this.queryRoute)
       })
-    }
+    },
+    // async queryRetain () {
+    //   this.loading = true
+    //   queryRetain(this.retainParam).then(res => {
+    //     if (res.data.result === 'fail') {
+    //       this.$message.error(res.data.message)
+    //     }
+    //     this.data = res.data.data
+
+    //     // 重新组装charts
+    //     this.setTableData(JSON.parse(JSON.stringify(this.data)))
+    //     this.setPersonData(JSON.parse(JSON.stringify(this.data)))
+    //     this.setPercentData(JSON.parse(JSON.stringify(this.data)))
+    //     this.loading = false
+
+    //     // 添加方法到自动刷新列表
+    //     this.$store.commit('addToAutoRefreshChartList', this.queryRetain)
+    //   })
+    // }
 
   },
   data () {
@@ -189,7 +201,8 @@ export default {
       tipType: 'item',
       personData: [],
       percentData: [],
-      lineType: 'person'
+      lineType: 'person',
+      eventList: [],
     }
   }
 }

@@ -8,9 +8,9 @@
       <!--任意事件 的 总次数-->
       <div id="normal-measure-line">
         <div id="select-event" class="selector select-event">
-          <el-select v-model="value1" placeholder="请选择" filterable style="width: 150px" @change="paramChange">
+          <el-select v-model="events" placeholder="请选择" filterable style="width: 150px" @change="paramChange">
             <el-option-group
-              v-for="group in options1"
+              v-for="group in eventList"
               :key="group.label"
               :label="group.label"
             >
@@ -56,6 +56,9 @@ export default {
     index: {
       required: true,
       type: Number
+    },
+    eventList: {
+      type: Array
     }
   },
   methods: {
@@ -67,8 +70,8 @@ export default {
     },
     paramChange: function () {
       let event = {
-        pageName: this.value1.split('-')[0] || '',
-        eventName: this.value1.split('-')[1] || '',
+        pageName: this.events.split('-')[0] || '',
+        eventName: this.events.split('-')[1] || '',
         metric: this.value2
       }
       this.eventParam.events[this.index] = event
@@ -78,23 +81,7 @@ export default {
   },
   data () {
     return {
-      options1: [{
-        label: '任意事件',
-        options: [{
-          value: '',
-          label: '任意事件'
-        }]
-      }, {
-        label: '个人中心',
-        options: [{
-          value: '个人中心-账号管理',
-          label: '账号管理'
-        }, {
-          value: '个人中心-我的活动',
-          label: '我的活动'
-        }]
-      }],
-      value1: '',
+      events: '',
 
       options2: [{
         value: 'total_count',

@@ -4,9 +4,9 @@
     <div class="ops-item ops-item-single">
       <span>用户进行</span>
       <div class="selector select-event">
-        <el-select v-model="value1" placeholder="请选择" filterable style="width: 150px" @change="handleSelect">
+        <el-select v-model="events" placeholder="请选择" filterable style="width: 150px" @change="handleSelect">
           <el-option-group
-            v-for="group in options1"
+            v-for="group in eventList"
             :key="group.label"
             :label="group.label"
           >
@@ -35,7 +35,7 @@
     <!--按分组查看-->
     <div class="ops-item">
       <!--分组-->
-      <search-group :index='0'/>
+      <search-group :selectData="commonData" :index='0'/>
     </div>
 
     <!--筛选条件-->
@@ -56,7 +56,7 @@
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
 import RefreshHandler from '../../../utils/refresh-handler'
-import {mixData, funcData} from '../../../utils/staticData'
+import {mixData, funcData, unitData} from '../../../utils/staticData'
 
 import {funnelList} from '../../../api/module_index'
 import {mapGetters} from 'vuex'
@@ -74,11 +74,12 @@ export default {
   mounted() {
     this.mixData = mixData
     this.funcData = funcData
+    this.commonData = unitData
   },
   methods: {
     handleSelect: function () {
-      this.disParam.pageName = this.value1.split('-')[0] || ''
-      this.disParam.eventName = this.value1.split('-')[1] || ''
+      this.disParam.pageName = this.events.split('-')[0] || ''
+      this.disParam.eventName = this.events.split('-')[1] || ''
       this.$store.commit('updateDisParam', this.disParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
@@ -101,29 +102,19 @@ export default {
       this.$store.commit('updateAutoRefreshCode', Math.random())
     }
   },
+  props: {
+    eventList: {
+      type: Array
+    }
+  },
   data () {
     return {
       funnels: [],
       mixData: [],
       funcData: [],
+      commonData: [],
       value: null,
-      options1: [{
-        label: '任意事件',
-        options: [{
-          value: '',
-          label: '任意事件'
-        }]
-      }, {
-        label: '个人中心',
-        options: [{
-          value: '个人中心-账号管理',
-          label: '账号管理'
-        }, {
-          value: '个人中心-我的活动',
-          label: '我的活动'
-        }]
-      }],
-      value1: '',
+      events: '',
 
       options2: [{
         value: 'total_count',

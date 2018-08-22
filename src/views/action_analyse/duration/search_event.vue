@@ -8,9 +8,9 @@
       <!--事件选择-->
       <div id="normal-measure-line">
         <div id="select-event" class="selector select-event">
-          <el-select v-model="value1" placeholder="请选择" filterable style="width: 150px" @change="paramChange(index)">
+          <el-select v-model="events" placeholder="请选择" filterable style="width: 165px" @change="paramChange(index)">
             <el-option-group
-              v-for="group in options1"
+              v-for="group in eventList"
               :key="group.label"
               :label="group.label"
             >
@@ -41,6 +41,15 @@ export default {
     index: {
       required: true,
       type: Number
+    },
+    eventList: {
+      type: Array
+    }
+  },
+  updated() {
+    if(this.currentSelectName !== this.durationParam.productName) {
+      this.currentSelectName = this.durationParam.productName
+      this.events = this.eventList[0].options[0].value
     }
   },
   methods: {
@@ -51,9 +60,12 @@ export default {
       this.$store.commit('updateAutoRefreshCode', Math.random())
     },
     paramChange: function (index) {
+      console.log(index)
+      let pageName = this.events.substring(0, this.events.indexOf('-'))
+      let eventName = this.events.substring(this.events.indexOf('-')+1)
       let event = {
-        pageName: this.value1.split('-')[0] || '',
-        eventName: this.value1.split('-')[1] || ''
+        pageName: pageName || '',
+        eventName: eventName || ''
       }
       if (index == 0) {
         this.durationParam.firstEvent = event
@@ -68,17 +80,8 @@ export default {
   data () {
     return {
       eventItems: ['A', 'B'],
-      options1: [ {
-        label: '个人中心',
-        options: [{
-          value: '个人中心-账号管理',
-          label: '账号管理'
-        }, {
-          value: '个人中心-我的活动',
-          label: '我的活动'
-        }]
-      }],
-      value1: ''
+      events: '',
+      currentSelectName: ''
     }
   }
 }

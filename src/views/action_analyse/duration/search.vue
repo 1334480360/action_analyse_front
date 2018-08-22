@@ -10,13 +10,13 @@
     <section class="report-ops" id="report-ops">
       <div class="ops-item measures-container">
         <!--按事件-->
-        <search-event v-for="(item, index) in ['A', 'B']" :index="index" :key="index"></search-event>
+        <search-event :eventList="eventList" v-for="(item, index) in ['A', 'B']" :index="index" :key="index"></search-event>
       </div>
 
       <!--按分组查看-->
       <div id="segmentation-group-hold-place" class="ops-item">
         <!--分组-->
-        <search-group v-for="(item, index) in groupItems" :index="index" :key="index"></search-group>
+        <search-group v-for="(item, index) in groupItems" :selectData="commonData" :index="index" :key="index"></search-group>
       </div>
 
       <!--筛选条件-->
@@ -44,7 +44,7 @@
 import SearchEvent from './search_event'
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
-import {eventData, userData, funcData} from '../../../utils/staticData'
+import {eventData, userData, funcData, unitData} from '../../../utils/staticData'
 
 import {mapGetters} from 'vuex'
 
@@ -54,7 +54,13 @@ export default {
     return {
       eventData: [],
       userData: [],
-      funcData: []
+      funcData: [],
+      commonData: []
+    }
+  },
+  props: {
+    eventList: {
+      type: Array
     }
   },
   components: {
@@ -75,6 +81,7 @@ export default {
     this.eventData = eventData
     this.userData = userData
     this.funcData = funcData
+    this.commonData = unitData
   },
   methods: {
     eventRemove: function () {

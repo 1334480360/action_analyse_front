@@ -15,7 +15,7 @@
         <div class="selector select-funnel">
           <div class="group-control-item">
             <!--分组-->
-            <search-group :index="0"/>
+            <search-group :selectData="commonData" :index="0"/>
           </div>
         </div>
         <el-button type="success" class="btn btn-primary btn-create-fu pull-right" @click="createFunnel">创建漏斗</el-button>
@@ -38,7 +38,7 @@
 import SearchGroup from '../search_group'
 import SearchFilters from '../search_filters'
 import RefreshHandler from '../../../utils/refresh-handler'
-import {mixData, funcData} from '../../../utils/staticData'
+import {mixData, funcData, unitData} from '../../../utils/staticData'
 
 import {funnelList} from '../../../api/module_index'
 import {mapGetters} from 'vuex'
@@ -58,6 +58,7 @@ export default {
     this.getFunnelList()
     this.mixData = mixData
     this.funcData = funcData
+    this.commonData = unitData
   },
   watch: {
     appName () {
@@ -78,7 +79,8 @@ export default {
       funnels: [],
       value: null,
       mixData: [],
-      funcData: []
+      funcData: [],
+      commonData: []
     }
   },
   methods: {

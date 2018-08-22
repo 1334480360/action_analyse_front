@@ -91,6 +91,15 @@ export function queryDuration (param) {
   })
 }
 
+// 获取用户分析结果
+export function queryRoute (param) {
+  return request({
+    url: baseUrl + '/analysis/user-path/getResult',
+    method: 'post',
+    data: param
+  })
+}
+
 // 获取事件数据列表
 export function queryEventList (param) {
   return request({

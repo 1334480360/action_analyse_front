@@ -20,7 +20,7 @@
     </div>
     <div class="sa-report">
       <!--数据搜索条件-->
-      <search/>
+      <search :eventList="eventList"/>
 
       <!--图表搜索条件-->
       <chart-search/>
@@ -85,7 +85,7 @@ import ChartSearch from './chart_search'
 import ChartTable from './chart_table'
 import RefreshHandler from '../../../utils/refresh-handler'
 
-import {eventResult} from '../../../api/module_index'
+import {eventResult, queryEventList} from '../../../api/module_index'
 import {formatStrToDate} from '../../../assets/common'
 import {mapGetters} from 'vuex'
 
@@ -109,6 +109,7 @@ export default {
     this.GLOBAL.endDate = this.eventParam.endDate
   },
   mounted () {
+    this.getEventsList(this.eventParam.productName)
     this.getEventResult()
   },
   beforeDestroy () {
@@ -127,8 +128,41 @@ export default {
     },
     paramChange: function () {
       this.eventParam.productName = this.value
+      this.getEventsList(this.eventParam.productName)
       this.$store.commit('updateEventParam', this.eventParam)
       this.$store.commit('updateAutoRefreshCode', Math.random())
+    },
+    getEventsList(param) {
+      let obj = {
+        label: '任意事件',
+        options: [{
+          value: '',
+          label: '任意事件'
+        }]
+      }
+      queryEventList({productName: param}).then(res=> {
+        let arr = this.handleEventData(res.data.data);
+        arr.unshift(obj)
+        this.eventList = arr
+      }).catch(err=> {
+        this.$message.error(err)
+      })
+    },
+    handleEventData(data) {
+      let arr = []
+     
+      for (let pageName in data) {
+        let tempObj = {label: '', options: []}
+     
+        tempObj.label = pageName
+        for (let i = 0; i < data[pageName].length; i++) {
+          let subObj = {}
+          subObj = {value: `${pageName}-${data[pageName][i].eventName}`, label: data[pageName][i].eventName}
+          tempObj.options.push(subObj)
+        }
+        arr.push(tempObj)
+      }
+      return arr
     },
     setCharts: function (data) {
       if (data === null || data.length < 1) {
@@ -258,6 +292,7 @@ export default {
       tableData: [],
       pieData: [],
       dateArr: [],
+      eventList: [],
       loading: true,
       options: [{
         value: 'my-dafy',
