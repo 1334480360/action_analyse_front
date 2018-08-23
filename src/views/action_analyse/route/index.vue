@@ -25,8 +25,8 @@
       <chart-search/>
       <!--图表展示区域-->
       <section class="report-chart"
-               style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent; text-align: center;">
-          
+               style="padding-bottom: 20px; -webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: #F7F9FA;; text-align: center;">
+        <sankey-diagram :total-show="true" :chart-data="chartData" />
       </section>
     </div>
   </div>
@@ -37,11 +37,13 @@ import Search from './search'
 import ChartSearch from './chart_search'
 
 import {mapGetters} from 'vuex'
-import {queryRoute, queryEventList } from '../../../api/module_index'
+import {queryRoute, queryEventList} from '../../../api/module_index'
+import SankeyDiagram from '../../components/SankeyDiagram'
 
 export default {
   name: 'index',
   components: {
+    SankeyDiagram,
     Search,
     ChartSearch
   },
@@ -73,19 +75,19 @@ export default {
     sortByLetter: function (a, b) {
       return a.group >= b.group ? 1 : -1
     },
-    getEventsList(param) {
-      queryEventList({productName: param}).then(res=> {
+    getEventsList (param) {
+      queryEventList({productName: param}).then(res => {
         this.eventList = this.handleEventData(res.data.data)
-      }).catch(err=> {
+      }).catch(err => {
         this.$message.error(err)
       })
     },
-    handleEventData(data) {
+    handleEventData (data) {
       let arr = []
-     
+
       for (let pageName in data) {
         let tempObj = {label: '', options: []}
-     
+
         tempObj.label = pageName
         for (let i = 0; i < data[pageName].length; i++) {
           let subObj = {}
@@ -96,96 +98,27 @@ export default {
       }
       return arr
     },
-    setTableData: function (data) {
-      this.handleDateType(this.retainParam.unit)
-      this.dateArr = []
-      this.tableData = []
-      // let dateSet = new Set()
-      for (let i = 0; i < data[0].details.length; i++) {
-        this.dateArr.push(i)
-      }
-      for (let i = 0; i < data.length; i++) {
-        let obj = {date: '', userCount: [], rate: []}
-
-        obj.date = this.handleDate(data[i].beginDate)
-        for (let j = 0; j < data[i].details.length; j++) {
-          obj.userCount.push(data[i].details[j].userCount)
-          obj.rate.push(data[i].details[j].percent + '%')
-        }
-        this.tableData.push(obj)
-      }
-    },
-    setPersonData: function (data) {
-      let arr = []
-      for (let i = 0; i < data[0].details.length; i++) {
-        arr.push({datas: [], dimension: `第 ${i} ${this.dateType}`})
-      }
-
-      for (let i = 0; i < arr.length; i++) {
-        for (let j = 0; j < data.length; j++) {
-          if (data[j].details[i]) {
-            arr[i].datas.push({value: data[j].details[i].userCount, date: this.handleDate(data[j].details[i].retainDate)})
-          }
-        }
-      }
-      this.personData = arr
-    },
-    setPercentData: function (data) {
-      let arr = []
-      for (let i = 0; i < data[0].details.length; i++) {
-        arr.push({datas: [], dimension: `第 ${i} ${this.dateType}`})
-      }
-
-      for (let i = 0; i < arr.length; i++) {
-        for (let j = 0; j < data.length; j++) {
-          if (data[j].details[i]) {
-            arr[i].datas.push({value: data[j].details[i].percent, date: this.handleDate(data[j].details[i].retainDate)})
-          }
-        }
-      }
-      this.percentData = arr
-    },
-    queryRoute: function() {
+    queryRoute: function () {
       this.loading = true
       queryRoute(this.routeParam).then(res => {
         if (res.data.result === 'fail') {
           this.$message.error(res.data.message)
         }
-        this.data = res.data.data
-        console.log(this.data)
-        // 重新组装charts
-        // this.setTableData(JSON.parse(JSON.stringify(this.data)))
-        // this.setPersonData(JSON.parse(JSON.stringify(this.data)))
-        // this.setPercentData(JSON.parse(JSON.stringify(this.data)))
+        this.chartData = res.data.data
+        console.log(this.chartData)
         this.loading = false
 
         // 添加方法到自动刷新列表
         this.$store.commit('addToAutoRefreshChartList', this.queryRoute)
       })
-    },
-    // async queryRetain () {
-    //   this.loading = true
-    //   queryRetain(this.retainParam).then(res => {
-    //     if (res.data.result === 'fail') {
-    //       this.$message.error(res.data.message)
-    //     }
-    //     this.data = res.data.data
-
-    //     // 重新组装charts
-    //     this.setTableData(JSON.parse(JSON.stringify(this.data)))
-    //     this.setPersonData(JSON.parse(JSON.stringify(this.data)))
-    //     this.setPercentData(JSON.parse(JSON.stringify(this.data)))
-    //     this.loading = false
-
-    //     // 添加方法到自动刷新列表
-    //     this.$store.commit('addToAutoRefreshChartList', this.queryRetain)
-    //   })
-    // }
-
+    }
   },
   data () {
     return {
-      data: [],
+      chartData: {
+        links: [],
+        nodes: []
+      },
       options: [{
         value: 'my-dafy',
         label: '个人中心'
@@ -202,7 +135,7 @@ export default {
       personData: [],
       percentData: [],
       lineType: 'person',
-      eventList: [],
+      eventList: []
     }
   }
 }
