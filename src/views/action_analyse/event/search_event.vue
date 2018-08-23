@@ -61,6 +61,12 @@ export default {
       type: Array
     }
   },
+  updated() {
+    if(this.currentSelectName !== this.eventParam.productName) {
+      this.currentSelectName = this.eventParam.productName
+      this.events = this.eventList[0].options[0].value
+    }
+  },
   methods: {
     eventRemove: function () {
       this.$store.commit('removeEventItems')
@@ -82,7 +88,7 @@ export default {
   data () {
     return {
       events: '',
-
+      currentSelectName: '',
       options2: [{
         value: 'total_count',
         label: '总次数'

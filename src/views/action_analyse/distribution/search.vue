@@ -71,6 +71,12 @@ export default {
     ...mapGetters(['appName']),
     ...mapGetters(['disParam'])
   },
+  updated() {
+    if(this.currentSelectName !== this.disParam.appName) {
+      this.currentSelectName = this.disParam.appName
+      this.events = this.eventList[0].options[0].value
+    }
+  },
   mounted() {
     this.mixData = mixData
     this.funcData = funcData
@@ -115,7 +121,7 @@ export default {
       commonData: [],
       value: null,
       events: '',
-
+      currentSelectName: '',
       options2: [{
         value: 'total_count',
         label: '总次数'

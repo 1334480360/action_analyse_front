@@ -112,6 +112,7 @@ export default {
   methods: {
     eventSelect: function() {
       console.log(this.events)
+      let eventArr = []
       let arr = []
       let obj = {}
       for (let i = 0; i < this.events.length; i++) {
@@ -122,6 +123,9 @@ export default {
           obj[label] = []
         }
         obj[label].push(this.events[i])
+
+        eventArr.push({pageName: label, eventName: value});
+        console.log(label, value)
       }
       for (let pageName in obj) {
         let temp = {label: '', options: []}
@@ -135,6 +139,9 @@ export default {
         arr.push(temp)
       }
       this.subEvent = arr
+      this.routeParam.events = eventArr
+      this.$store.commit('updateRouteParam', this.routeParam)
+      console.log(eventArr)
     },
     handleSelect: function() {
       this.routeParam.isBegin = this.beganEventVal

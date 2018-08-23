@@ -35,7 +35,8 @@ export default {
     ...mapGetters(['funnelParam']),
     ...mapGetters(['disParam']),
     ...mapGetters(['retainParam']),
-    ...mapGetters(['durationParam'])
+    ...mapGetters(['durationParam']),
+    ...mapGetters(['routeParam'])
   },
   methods: {
     datePickChange: function (val) {
@@ -74,6 +75,10 @@ export default {
       this.durationParam.beginDate = this.GLOBAL.beginDate
       this.durationParam.endDate = this.GLOBAL.endDate
       this.$store.commit('updateDurationParam', this.durationParam)
+      // 路径分析
+      this.routeParam.beginDate = this.GLOBAL.beginDate
+      this.routeParam.endDate = this.GLOBAL.endDate
+      this.$store.commit('updateRouteParam', this.routeParam)
 
       this.$store.commit('updateAutoRefreshCode', Math.random())
     }
