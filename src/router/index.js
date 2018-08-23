@@ -82,6 +82,7 @@ export const asyncRouterMap = [
       component: () => import('@/views/data_preview/index'),
       name: 'boss_view',
       meta: {
+        roles: ['admin'],
         title: 'boss_view',
         icon: 'chart'
       }
