@@ -120,6 +120,7 @@ export const asyncRouterMap = [
       meta: {
         title: 'funnel',
         icon: 'component'
+
       }
     }, {
       path: 'retain',
